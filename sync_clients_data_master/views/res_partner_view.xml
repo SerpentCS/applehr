@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+    <record id="dhama_res_partner_sync_view" model="ir.ui.view">
+        <field name="name">dhama.res.partner.sync.view</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='internal_notes']" position="after">
+                <page string='Sync Client Data'>
+                    <field name='remote_servers_ids'>
+                        <tree string="Sync Client Data" editable='bottom'>
+                            <field name='name'/>
+                            <field name='url'/>
+                            <field name='user'/>
+                            <field name='password' password="True"/>
+                            <field name='dbname'/>
+                            <field name='date_sync'/>
+                            <button name="button_sync_partner_data"
+                                    class="btn date_donebtn-primary"
+                                    type="object"
+                                    string="Sync Data"
+                                    icon="fa-undo"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+     </data>
+</odoo>
