@@ -2,7 +2,7 @@
 
 {
     "name": "Spequa Billing Portal",
-    "version": "14.0.1.0.2",
+    "version": "14.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "license": "AGPL-3",
     "website": "www.serpentcs.com",
