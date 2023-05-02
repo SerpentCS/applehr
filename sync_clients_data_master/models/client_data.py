@@ -1,23 +1,18 @@
 
-from odoo import _, api, fields, models, modules
-import uuid, copy
-
-from datetime import datetime
+from odoo import fields, models
 
 
 class ClientData(models.Model):
     _name = "client.data"
-    _descripation = "Manage Client Billing Data"
+    _description = "Manage Client Billing Data"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = "emp_name"
 
-    partner_id = fields.Many2one('res.partner', 'Customer',
-                                 ondelete="cascade",
-                                 copy=False,
-                                 index=True)
-    emp_name = fields.Char('Employee Name')
-    res_id = fields.Char('Res ID')
+    partner_id = fields.Many2one(
+        'res.partner', 'Customer', ondelete="cascade", copy=False, index=True)
+    emp_name = fields.Char('Employee')
+    emp_code = fields.Char('Spequa ID')
+    partner_company = fields.Char('Partner Company')
     res_model = fields.Char('Res Model')
-    date_start = fields.Date('Start Date', tracking=True)
-    date_end = fields.Date('Ending Date', tracking=True)
-    active = fields.Boolean('Status', tracking=True)
+    date = fields.Date('Date', tracking=True)
+    remote_server_id = fields.Many2one('remote.server', 'Remote Server')

@@ -7,20 +7,8 @@
         <field name="state">code</field>
         <field name="code">model._client_log_data_fetch()</field>
         <field name="interval_number">1</field>
-        <field name="interval_type">hours</field>
+        <field name="interval_type">days</field>
         <field name="priority">1</field>
-        <field name="numbercall">-1</field>
-        <field name="doall" eval="False"/>
-    </record>
-
-    <record id="ir_cron_client_process_data" model="ir.cron">
-        <field name="name">Client sync data: Client Process Data</field>
-        <field name="model_id" ref="sync_clients_data_master.model_remote_server"/>
-        <field name="state">code</field>
-        <field name="code">model._client_process_data()</field>
-        <field name="interval_number">1</field>
-        <field name="interval_type">hours</field>
-        <field name="priority">2</field>
         <field name="numbercall">-1</field>
         <field name="doall" eval="False"/>
     </record>
@@ -35,19 +23,6 @@
         <field name="nextcall" eval="(DateTime.now().replace(day=1, hour=2, minute=0) + relativedelta(months=1)).strftime('%Y-%m-%d %H:%M:%S')" />
         <field name="priority">3</field>
         <field name="numbercall">-1</field>
-        <field name="doall" eval="False"/>
-    </record>
-
-    <record model="ir.cron" id="ir_cron_auto_vacuum">
-        <field name="name">Client sync data: Auto Vacuum</field>
-        <field name="model_id" ref="sync_clients_data_master.model_sync_client_data_log"/>
-        <field name="state">code</field>
-        <field name="code">model._cron_log_auto_vacuum()</field>
-        <field name="interval_number">1</field>
-        <field name="interval_type">months</field>
-        <field name="numbercall">-1</field>
-        <field name="nextcall" eval="(DateTime.now().replace(day=1, hour=2, minute=0) + relativedelta(months=1)).strftime('%Y-%m-%d %H:%M:%S')" />
-        <field name="priority">1</field>
         <field name="doall" eval="False"/>
     </record>
 

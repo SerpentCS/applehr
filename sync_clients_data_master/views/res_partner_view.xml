@@ -1,31 +1,114 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
-    <record id="dhama_res_partner_sync_view" model="ir.ui.view">
-        <field name="name">dhama.res.partner.sync.view</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_form" />
-        <field name="arch" type="xml">
-            <xpath expr="//page[@name='internal_notes']" position="after">
-                <page string='Sync Client Data'>
-                    <field name='remote_servers_ids'>
-                        <tree string="Sync Client Data" editable='bottom'>
-                            <field name='name'/>
-                            <field name='url'/>
-                            <field name='user'/>
-                            <field name='password' password="True"/>
-                            <field name='dbname'/>
-                            <field name='date_sync'/>
-                            <button name="button_sync_partner_data"
-                                    class="btn date_donebtn-primary"
-                                    type="object"
-                                    string="Sync Data"
-                                    icon="fa-undo"/>
-                        </tree>
-                    </field>
-                </page>
-            </xpath>
-        </field>
-    </record>
-     </data>
+        <record id="act_res_partner_agent_bills" model="ir.actions.act_window">
+            <field name="name">Agent Bills</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="domain">[('move_type','in',('in_invoice', 'in_refund'))]</field>
+            <field name="context">{'search_default_partner_id': active_id, 'default_move_type': 'in_invoice', 'default_partner_id': active_id}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new vendor bill
+                </p><p>
+                    Agent bills can be pre-generated based on purchase
+                    orders or receipts. This allows you to control bills
+                    you receive from your vendor according to the draft
+                    document in Odoo.
+                </p>
+            </field>
+        </record>
+        <record id="dhama_res_partner_sync_view" model="ir.ui.view">
+            <field name="name">dhama.res.partner.sync.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" name="%(sync_clients_data_master.act_res_partner_agent_bills)d" type="action"
+                        icon="fa-pencil-square-o" help="Agent Bills">
+                        <field string="Agent Bills" name="agent_bills_count" widget="statinfo"/>
+                    </button>
+                </div>
+                <xpath expr="//page[@name='internal_notes']" position="after">
+                    <page string='Sync Client Data'>
+                        <field name='remote_servers_ids'>
+                            <tree string="Sync Client Data" editable='bottom'>
+                                <field name='name'/>
+                                <field name='url'/>
+                                <field name='user'/>
+                                <field name='password' password="True"/>
+                                <field name='dbname'/>
+                                <field name="rate"/>
+                                <field name='date_sync'/>
+                                <button name="button_sync_partner_data" class="btn date_donebtn-primary" type="object" string="Sync Data" icon="fa-undo"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='category_id']" position="after">
+                    <field name="agent_id" attrs="{'invisible': [('is_agent', '=', True)]}" domain="[('is_agent', '=', True)]" options="{'no_create': True}"/>
+                    <field name="agent_commission" attrs="{'invisible': [('is_agent', '=', True)]}"/>
+                    <field name="is_agent" invisible="1"/>
+                </xpath>
+                <xpath expr="//notebook" position="attributes">
+                    <attribute name="attrs">
+                        {'invisible': [
+                            ('is_agent', '=', True)
+                        ]}
+                    </attribute>
+                </xpath>
+                <xpath expr="//field[@name='vat']" position="after">
+                    <field name="pan_number" attrs="{'invisible': [('is_agent', '!=', True)]}"/>
+                </xpath>
+                <xpath expr="//page[@name='contact_addresses']" position="attributes">
+                   <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='sales_purchases']" position="attributes">
+                   <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='internal_notes']" position="attributes">
+                   <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='accounting']" position="attributes">
+                   <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_partner_form_sync" model="ir.ui.view">
+            <field name="name">res.partner.sync.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base_vat.view_partner_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="attributes">
+                    <attribute name="string">GST</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_partner_action_customer_agent" model="ir.actions.act_window">
+            <field name="name">Agent</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('is_agent','=', True)]</field>
+            <field name="context">{'default_is_agent': True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new agent in your address book
+                </p>
+                <p>
+                    Odoo helps you easily track all activities related to a agent.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_account_customer_agent"
+            name="Agent"
+            parent="account.menu_finance_receivables"
+            action="res_partner_action_customer_agent"
+            sequence="110"
+        />
+
+    </data>
 </odoo>
