@@ -2,10 +2,10 @@
 
 {
     "name": "Spequa Billing Portal",
-    "version": "14.0.1.0.1",
+    "version": "16.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "license": "AGPL-3",
-    "website": "www.serpentcs.com",
+    "website": "http://www.serpentcs.com",
     "category": "Tools",
     "depends": [
         "mail",
@@ -20,7 +20,11 @@
         "views/res_partner_view.xml",
         "views/account_move_views.xml",
     ],
-    'qweb': ["static/src/xml/*.xml"],
+    "assets": {
+        "web.assets_common": [
+            "sync_clients_data_master/static/src/js/user_items.js",
+        ]
+    },
     "application": True,
     "installable": True,
 }
