@@ -31,6 +31,7 @@ class RemoteServer(models.Model):
     )
     date_sync = fields.Datetime(string="Last Sync Date", default=datetime.now())
     rate = fields.Float()
+    start_date = fields.Date(string="Start Date")
 
     def _fetch_client_log_data(self, server):
         log_datas = []
@@ -50,10 +51,16 @@ class RemoteServer(models.Model):
                 dbname,
                 uid,
                 password,
-                "hr.employee",
+                "partner.work.history",
                 "search_read",
-                [("state", "!=", "terminated")],
-                ["full_name", "emp_code", "partner_company_id"],
+                ([
+                    ('employee_id', '!=', False),
+                    ('join_date', '<=', self.start_date),
+                    '|',
+                    ('end_date', '>=', fields.Date.today()),
+                    ('end_date', '=', False)
+                ]),
+                ["partner_company_id", "employee_id", "emp_code"],
             )
         except:
             _logger.warning("Could not retrieve data from client server")
@@ -61,7 +68,7 @@ class RemoteServer(models.Model):
         for logdata in log_datas:
             vals = {
                 "partner_id": self.partner_id.id,
-                "emp_name": logdata.get("full_name"),
+                "emp_name": logdata.get("employee_id")[1],
                 "res_model": "hr.employee",
                 "emp_code": logdata.get("emp_code"),
                 "partner_company": logdata.get("partner_company_id")[1]
@@ -74,6 +81,81 @@ class RemoteServer(models.Model):
                 [
                     ("date", "=", fields.Date.today()),
                     ("emp_code", "=", logdata.get("emp_code")),
+                    ("remote_server_id", "=", self.id),
+                ],
+                limit=1,
+            )
+            if not client_data_rec:
+                employee_data.append(vals)
+        self.env["client.data"].create(employee_data)
+        server["date_sync"] = datetime.now()
+        return True
+
+    def _fetch_client_past_date_deta(self, server):
+        log_datas = []
+        employee_data_dic = []
+        if server:
+            addr = server.url
+            userid = server.user
+            password = server.password
+            dbname = server.dbname
+        try:
+            uid = xmlrpclib.ServerProxy("%s/xmlrpc/common" % (addr)).authenticate(
+                dbname, userid, password, {}
+            )
+        except:
+            _logger.warning("Could not authenticate user on the remote server")
+        try:
+            log_datas = xmlrpclib.ServerProxy("%s/xmlrpc/object" % (addr)).execute(
+                dbname,
+                uid,
+                password,
+                "partner.work.history",
+                "search_read",
+                ([
+                    ('employee_id', '!=', False),
+                    ('join_date', '<=', self.start_date),
+                    ('write_date', '<=', fields.Date.today()),
+                    ('write_date', '>=', fields.Date.today()),
+                    '|',
+                    ('end_date', '>=', fields.Date.today()),
+                    ('end_date', '=', False)
+                ]),
+                ["partner_company_id", "employee_id", "emp_code"],
+            )
+            if self.start_date <= fields.Date.today():
+                for log_data in log_datas:
+                    number_of_days = 1
+                    differece_days = fields.Date.today() - self.start_date
+                    for day in range(differece_days.days + 1):
+                        date = self.start_date + relativedelta(day=number_of_days)
+                        employee_data_dic.append({
+                            'partner_company': log_data.get("partner_company_id")[1]
+                            if log_data.get("partner_company_id")
+                            else "",
+                            "emp_code": log_data.get("emp_code"),
+                            "emp_name": log_data.get("employee_id")[1],
+                            "date": date
+                        })
+                        number_of_days += 1
+        except:
+            _logger.warning("Could not retrieve data from client server")
+        employee_data = []
+        for emp_data in employee_data_dic:
+            vals = {
+                "partner_id": self.partner_id.id,
+                "emp_name": emp_data.get("emp_name"),
+                "res_model": "hr.employee",
+                "emp_code": emp_data.get("emp_code"),
+                "partner_company": emp_data.get("partner_company"),
+                "date": emp_data.get("date"),
+                "remote_server_id": self.id,
+            }
+            client_data_rec = self.env["client.data"].search(
+                [
+                    ("date", "=", emp_data.get("date")),
+                    ("emp_code", "=", emp_data.get("emp_code")),
+                    ("remote_server_id", "=", self.id),
                 ],
                 limit=1,
             )
@@ -112,6 +194,13 @@ class RemoteServer(models.Model):
         server_datas = self.env["remote.server"].search([])
         for server in server_datas:
             server._fetch_client_log_data(server)
+            self._cr.commit()
+
+    @api.model
+    def _client_log_data_fetch_past_date(self):
+        server_datas = self.env["remote.server"].search([])
+        for server in server_datas:
+            server._fetch_client_past_date_deta(server)
             self._cr.commit()
 
     @api.model

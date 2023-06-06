@@ -51,6 +51,7 @@
                             <field name='password' password="True" />
                             <field name='dbname' />
                             <field name="rate" />
+                            <field name="start_date" required="1"/>
                             <field name='date_sync' />
                             <button
                                 name="button_sync_partner_data"
