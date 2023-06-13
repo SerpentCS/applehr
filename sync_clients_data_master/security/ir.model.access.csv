@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_remote_server,access_remote_server,model_remote_server,,1,1,1,1
 access_client_data,access_client_data,model_client_data,,1,1,1,1
+sync_clients_data_master.access_balance_history,access_balance_history,sync_clients_data_master.model_balance_history,base.group_user,1,1,1,0
+sync_clients_data_master.access_spequa_charges,access_spequa_charges,sync_clients_data_master.model_spequa_charges,base.group_user,1,1,1,1

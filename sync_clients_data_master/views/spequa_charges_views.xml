@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="spequa_charges_form_views" model="ir.ui.view">
+        <field name="name">spequa.charges.form</field>
+        <field name="model">spequa.charges</field>
+        <field name="arch" type="xml">
+            <form string="Spequa Charges">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                    <button name="action_send_for_approval" states="draft" string="Send For Approval" type="object" class="oe_highlight"/>
+                    <button name="action_approved" states="waiting_for_approval" string="Approve" type="object" class="oe_highlight"/>
+                    <button name="action_reset_to_draft" states="waiting_for_approval,rejected" string="Reset To Draft" type="object" class="oe_highlight"/>
+                    <button name="action_reject" states="waiting_for_approval" string="Reject" type="object" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="name" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        </group>
+                        <group>
+                            <field name="amount" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="spequa_charges_tree_views">
+        <field name="name">spequa.charges.tree</field>
+        <field name="model">spequa.charges</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="partner_id" />
+                <field name="name"/>
+                <field name="amount"/>
+                <field name="date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="spequa_charges_filter_views" model="ir.ui.view">
+        <field name="name">spequa.charges.search</field>
+        <field name="model">spequa.charges</field>
+        <field name="arch" type="xml">
+            <search string="Search Spequa Charges">
+                <field name="partner_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Customer" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_spequa_charges">
+        <field name="name">Spequa Charges</field>
+        <field name="res_model">spequa.charges</field>
+    </record>
+
+    <menuitem
+        id="menu_spequa_charges"
+        name="Spequa Charges"
+        parent="account.menu_finance_receivables"
+        action="action_spequa_charges"
+        sequence="111"
+    />
+
+</odoo>

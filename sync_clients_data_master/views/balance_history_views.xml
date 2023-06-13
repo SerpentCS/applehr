@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="balance_history_form_views" model="ir.ui.view">
+        <field name="name">balance.history.form</field>
+        <field name="model">balance.history</field>
+        <field name="arch" type="xml">
+            <form string="Customer Balance">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1"/>
+                            <field name="description"/>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <field name="debit"/>
+                            <field name="credit"/>
+                            <field name="balance"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="balance_history_tree_views">
+        <field name="name">balance.history.tree</field>
+        <field name="model">balance.history</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="partner_id" />
+                <field name="description"/>
+                <field name="date"/>
+                <field name="debit"/>
+                <field name="credit"/>
+                <field name="balance"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="balance_history_filter_views" model="ir.ui.view">
+        <field name="name">balance.history.search</field>
+        <field name="model">balance.history</field>
+        <field name="arch" type="xml">
+            <search string="Search Balance History">
+                <field name="partner_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Customer" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_balance_history">
+        <field name="name">Balance History</field>
+        <field name="res_model">balance.history</field>
+        <field name="context">{"create": False, "delete": False, "edit": False, "search_default_partner": "partner_id"}</field>
+    </record>
+
+    <menuitem
+        id="menu_balance_history"
+        name="Balance History"
+        parent="account.menu_finance_receivables"
+        action="action_balance_history"
+        sequence="111"
+    />
+
+</odoo>

@@ -31,6 +31,8 @@
                                 readonly="1"
                                 options="{'no_open': True}"
                             />
+                            <field name="balance_history_id" readonly="1"/>
+                            <field name="is_paid" readonly="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -53,7 +55,9 @@
                 <field name="emp_name" />
                 <field name="emp_code" />
                 <field name="date" />
-                <field name="remote_server_id" />
+                <field name="remote_server_id"/>
+                <field name="balance_history_id" readonly="1"/>
+                <field name="is_paid"/>
             </tree>
         </field>
     </record>
@@ -68,6 +72,8 @@
                 <field name="partner_company" />
                 <field name="date" />
                 <field name="remote_server_id" />
+                <field name="balance_history_id" />
+                <filter name="paid" string="Paid" domain="[('is_paid','=', True)]"/>
                 <group expand="0" string="Group By">
                     <filter
                         string="Customer"
@@ -97,6 +103,12 @@
                         name="remote_server"
                         domain="[]"
                         context="{'group_by': 'remote_server_id'}"
+                    />
+                    <filter
+                        string="Charges Reference"
+                        name="balance_history"
+                        domain="[]"
+                        context="{'group_by': 'balance_history_id'}"
                     />
                 </group>
             </search>

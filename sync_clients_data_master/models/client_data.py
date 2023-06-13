@@ -16,3 +16,5 @@ class ClientData(models.Model):
     res_model = fields.Char()
     date = fields.Date(tracking=True)
     remote_server_id = fields.Many2one("remote.server", "Remote Server")
+    is_paid = fields.Boolean("Paid")
+    balance_history_id = fields.Many2one("balance.history", string="Charges Reference")

@@ -19,6 +19,8 @@
         "views/client_data_view.xml",
         "views/res_partner_view.xml",
         "views/account_move_views.xml",
+        "views/balance_history_views.xml",
+        "views/spequa_charges_views.xml",
     ],
     "assets": {
         "web.assets_common": [

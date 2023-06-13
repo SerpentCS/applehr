@@ -195,6 +195,7 @@ class RemoteServer(models.Model):
         for server in server_datas:
             server._fetch_client_log_data(server)
             self._cr.commit()
+        self._generate_employee_creation_charges()
 
     @api.model
     def _client_log_data_fetch_past_date(self):
@@ -202,6 +203,32 @@ class RemoteServer(models.Model):
         for server in server_datas:
             server._fetch_client_past_date_deta(server)
             self._cr.commit()
+        self._generate_employee_creation_charges()
+
+    def _generate_employee_creation_charges(self):
+        balance_history_obj = self.env['balance.history']
+        client_datas = self.env["client.data"].with_context(active_test=False).search([
+            ("is_paid", "=", False),
+            ("date", "<=", fields.Date.today())
+        ])
+        remote_server_rec = client_datas.mapped('remote_server_id')
+        for server in remote_server_rec:
+            number_of_employee = len(client_datas.filtered(lambda line: line.remote_server_id.id == server.id))
+            amount = number_of_employee * server.rate
+            new_balance_rec = balance_history_obj.create({
+                'description': 'Daily employee charges :- %s' %(fields.Date.today()),
+                'partner_id': server.partner_id.id,
+                'credit': 0.0,
+                'debit': amount,
+                'date': fields.Date.today(),
+            })
+            client_data_rec = client_datas.filtered(
+                lambda line: line.remote_server_id.id == server.id)
+            server.partner_id.balance -= amount
+            client_data_rec.write({
+                'balance_history_id': new_balance_rec.id,
+                'is_paid': True
+            })
 
     @api.model
     def _generate_customer_bill(self):

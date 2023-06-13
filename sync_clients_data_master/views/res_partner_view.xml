@@ -40,6 +40,19 @@
                         widget="statinfo"
                     />
                 </button>
+                <button
+                    class="oe_stat_button"
+                    name="action_customer_balance_history"
+                    type="object"
+                    icon="fa-pencil-square-o"
+                    help="Balance"
+                >
+                    <field
+                        string="Balance"
+                        name="balance"
+                        widget="statinfo"
+                    />
+                </button>
             </div>
             <xpath expr="//page[@name='internal_notes']" position="after">
                 <page string='Sync Client Data'>
