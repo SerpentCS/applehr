@@ -216,7 +216,7 @@ class RemoteServer(models.Model):
             number_of_employee = len(client_datas.filtered(lambda line: line.remote_server_id.id == server.id))
             amount = number_of_employee * server.rate
             new_balance_rec = balance_history_obj.create({
-                'description': 'Daily employee charges :- %s' %(fields.Date.today()),
+                'description': 'Daily employee charges :- %s' %(fields.Date.today().strftime('%d-%m-%Y')),
                 'partner_id': server.partner_id.id,
                 'credit': 0.0,
                 'debit': amount,

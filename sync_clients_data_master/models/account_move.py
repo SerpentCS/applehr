@@ -23,12 +23,12 @@ class AccountMove(models.Model):
             balance_values = {
                 'description': 'Balance added',
                 'partner_id': self.partner_id.id,
-                'credit': self.amount_total,
+                'credit': self.amount_untaxed,
                 'debit': 0.0,
                 'date': fields.Date.today(),
             }
             self.env['balance.history'].create(balance_values)
-            self.partner_id.balance += self.amount_total
+            self.partner_id.balance += self.amount_untaxed
         return res
 
 
