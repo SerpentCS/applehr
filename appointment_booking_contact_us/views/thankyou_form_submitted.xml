@@ -1,0 +1,45 @@
+<odoo>
+    <template id="thankyou_appointment_form" name="Appointment form">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="s_text_block pt40 pb40 o_colored_level " data-snippet="s_text_block">
+                    <div class="container mt64 ">
+                        <div class="row">
+                            <div class="col-lg-7 col-xl-6 me-lg-auto">
+                                <span class="d-block fa fa-4x fa-thumbs-up mx-auto rounded-circle bg-primary"/>
+                                <br/>
+                                <h1 class="text-center">Thank You!</h1>
+                                <div class="pb16 pt16">
+                                    <hr class="mx-auto border-top w-50 border-dark text-center"/>
+                                </div>  
+                                <h5 class="text-center">
+                                    <span class="fa fa-check-circle"/>
+                                    <span>Your Appointment has been created <b>successfully</b>
+                                    </span>
+                                </h5>
+                            </div>
+                            <div class="col-lg-4">
+                                <ul class="list-unstyled mb-0 ps-2">
+                                    <li>My Company</li>
+                                    <li>
+                                        <i class="fa fa-map-marker fa-fw me-2"/>
+                                        <span class="o_force_ltr">3575 Fake Buena Vista Avenue</span>
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-phone fa-fw me-2"/>
+                                        <span class="o_force_ltr">+1 (650) 555-0111</span>
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-1x fa-fw fa-envelope me-2"/>
+                                        <span>info@yourcompany.example.com</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+</odoo>

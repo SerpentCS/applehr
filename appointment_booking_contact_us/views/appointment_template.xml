@@ -1,0 +1,116 @@
+<odoo>
+    <template id="appointments_template" name="Appointment_contact_form">
+        <t t-call="website.layout">
+            <div class="container mt64 mb64">
+                <form role='form' action="/appointments" method="post" enctype="multipart/form-data" data-pre-fill="true">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"></input>
+                    <div class="col-12">
+                        <h1 class="o_page_header mb32 mt32">Schedule an Appointment</h1>
+                    </div>
+
+                    <div class="row s_col_no_bgcolor">
+
+                        <div class="mb-0 py-2 col-12">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto " style="width: 200px" for="contact1">
+                                    <span>Name</span>
+                                    <span> *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input id = "partner_name" type="text" class="form-control " name="partner_name" t-att-value="partner_name" required="1"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-0 py-2 col-12 ">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto " style="width: 200px" for="contact2">
+                                    <span class="">Phone Number</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input type="tel" class="form-control " name="phone" t-att-value="phone" required="1"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-0 py-2 col-12 ">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto " style="width: 200px" for="email">
+                                    <span>Email</span>
+                                    <span> *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input type="email" class="form-control " name="email" t-att-value="email" required="1" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-0 py-2 col-12 ">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto " style="width: 200px" for="contact4">
+                                    <span>Company</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input type="text" class="form-control" name="company" t-att-value="company" required="1"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-0 py-2 col-12">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto " style="width: 200px" for="contact5">
+                                    <span>Subject</span>
+                                    <span> *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input type="text" class="form-control" name="subject" t-att-value="subject" required="1"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-0 py-2 col-12 ">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto " style="width: 200px" for="description">
+                                    <span class="">Question</span>
+                                    <span class=""> *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <textarea class="form-control " name="description" t-esc="description" required="1">
+                                        <t t-att-value ="description"/>
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row ">
+                            <div class="mb-0 py-2 col-12 ">
+                                <div class="row ">
+                                    <label class="col-form-label col-sm-auto " style="width: 200px" for="start">
+                                        <span class="">Date for Visit</span>
+                                    </label>
+                                    <div class="col-sm">
+                                        <input type="text" id="datetimepickerID" class="form-control " data-target="#datetimepickerID" data-toggle="datetimepicker" name="start" t-att-value="start" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center col-12 ">
+                            <div style="width: 200px;"/>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                            Confirm Appointment</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </t>
+    </template>
+    <template id="contactus_button" inherit_id="website.contactus">
+        <xpath expr="//section[@class='s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24'][1]" position="before">
+            <div class="alert alert-danger" role="alert">
+                <h3>
+                    <t t-esc="error_message" />
+                </h3>
+            </div>
+        </xpath>
+        <xpath expr="//div[@class='mb-0 py-2 col-12 s_website_form_submit'][1]" position="inside">
+            <button type="button" id ='custom_redirect_button' class="btn btn-primary btn-lg ">
+                Book Slot</button>
+        </xpath>
+    </template>
+</odoo>
