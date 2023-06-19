@@ -27,7 +27,6 @@ class Appointmentform(http.Controller):
             else:
                 contact_us_dict = kw
             kw = contact_us_dict
-
             vals= {
                     'partner_name': kw.get('name') ,
                     'phone': kw.get('phone'),
@@ -79,7 +78,7 @@ class Appointmentform(http.Controller):
             request.env['calendar.event'].sudo().create(create_vals)
             request.env['crm.lead'].sudo().create(create_vals_crm)
             return request.render('appointment_booking_contact_us.thankyou_appointment_form')
-
+        
     @http.route(['/thankyouAppointmentsubmitted'], type='http', auth='public', website=True)
     def thankyou_submission(self, **kw):
 

@@ -7,9 +7,7 @@
                     <div class="col-12">
                         <h1 class="o_page_header mb32 mt32">Schedule an Appointment</h1>
                     </div>
-
                     <div class="row s_col_no_bgcolor">
-
                         <div class="mb-0 py-2 col-12">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto " style="width: 200px" for="contact1">
@@ -63,7 +61,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="mb-0 py-2 col-12 ">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto " style="width: 200px" for="description">
@@ -77,7 +74,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="row ">
                             <div class="mb-0 py-2 col-12 ">
                                 <div class="row ">
@@ -101,13 +97,6 @@
         </t>
     </template>
     <template id="contactus_button" inherit_id="website.contactus">
-        <xpath expr="//section[@class='s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24'][1]" position="before">
-            <div class="alert alert-danger" role="alert">
-                <h3>
-                    <t t-esc="error_message" />
-                </h3>
-            </div>
-        </xpath>
         <xpath expr="//div[@class='mb-0 py-2 col-12 s_website_form_submit'][1]" position="inside">
             <button type="button" id ='custom_redirect_button' class="btn btn-primary btn-lg ">
                 Book Slot</button>
