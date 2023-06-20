@@ -7,11 +7,14 @@
     'version': '16.0.1.0.0',
     'license': 'LGPL-3',
     'author': 'Serpent Consultancy Pvt Ltd',
-    'depends': ['crm','website','calendar'],
+    'depends': ['crm','website','calendar','appointment', 'hr'],
 
 
     'data': [
+
+            'security/ir.model.access.csv',
             'views/appointment_template.xml',
+            'views/crm_lead_meeting_tab.xml',
             'views/thankyou_form_submitted.xml',
             'data/website_data.xml',
     ],

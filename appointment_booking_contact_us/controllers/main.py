@@ -16,8 +16,25 @@ from odoo import fields as odoo_fields, http, tools, _, SUPERUSER_ID
 from odoo.addons.website.controllers.main import Website
 
 
-class Appointmentform(http.Controller):
 
+
+# class Appointment(http.Controller):
+
+#     @http.route(['/calendar','/calendar/page/<int:page>',], type='http', auth="public", website=True, sitemap=True)
+
+#     def 
+
+#     response = super(Appointment, self).contact_us(**kw)
+        
+#     #     # Custom code to retrieve additional data from the inherited page
+#     #     name = request.params.get('name')
+#     #     email = request.params.get('email')
+#     #     phone = request.params.get('phone')
+#     #     message = request.params.get('message')
+
+#     print(response)
+
+class Appointmentform(http.Controller):
     @http.route(['/appointments'], type='http', auth='public', website=True)
     def appointment_form(self, **kw):
         if request.httprequest.method == 'GET':
@@ -52,7 +69,6 @@ class Appointmentform(http.Controller):
             start_date = datetime.strptime(kw.get('start'), '%Y-%m-%d %H:%M:%S')
             user_tz_main =  pytz.timezone("Asia/Calcutta")
             if request.session.uid :
-                print("THISSSS IS IF STARTEMENT")
                 user_tz = request.env.user.tz 
                 user_tz_main = pytz.timezone(user_tz)
             localized_datetime = user_tz_main.localize(start_date)
@@ -68,6 +84,7 @@ class Appointmentform(http.Controller):
                 'attendee_ids': attendees_ids_obj_if_exits,
                 'user_id': request.env.user.id,
             }
+
             create_vals_crm = {
                 'name': kw.get('subject'),
                 'phone':kw.get('phone'),
@@ -75,6 +92,11 @@ class Appointmentform(http.Controller):
                 'partner_id': partner_id.id,
                 'user_id': request.env.user.id,
             }
+            meeting_ids_obj = [
+                 (0,0, { 'name':kw.get('subject') ,'phone': kw.get('phone'),'email_from': kw.get('email'),'partner_id': partner_id.id, 'user_id': request.env.user.id})
+                ]
+            create_vals_crm.update({
+                'meeting_ids': meeting_ids_obj})
             request.env['calendar.event'].sudo().create(create_vals)
             request.env['crm.lead'].sudo().create(create_vals_crm)
             return request.render('appointment_booking_contact_us.thankyou_appointment_form')
@@ -88,4 +110,20 @@ class Appointmentform(http.Controller):
 
 
    
+
+
+    # class CustomWebsiteController(http.Controller):
+    # @http.route(['/contactus'], type='http', auth="public", website=True)
+    # def contact_us(self, **kw):
+    #     # Call the original controller's method to handle the "Contact Us" page
+    #     response = super(CustomWebsiteController, self).contact_us(**kw)
+        
+    #     # Custom code to retrieve additional data from the inherited page
+    #     name = request.params.get('name')
+    #     email = request.params.get('email')
+    #     phone = request.params.get('phone')
+    #     message = request.params.get('message')
+        
+        
+    #     return response
 

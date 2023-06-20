@@ -22,7 +22,9 @@
                         <div class="mb-0 py-2 col-12 ">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto " style="width: 200px" for="contact2">
-                                    <span class="">Phone Number</span>
+                                    <span >Phone Number</span>
+                                    <span> *</span>
+
                                 </label>
                                 <div class="col-sm">
                                     <input type="tel" class="form-control " name="phone" t-att-value="phone" required="1"/>
@@ -44,6 +46,7 @@
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto " style="width: 200px" for="contact4">
                                     <span>Company</span>
+                                    <span> *</span>
                                 </label>
                                 <div class="col-sm">
                                     <input type="text" class="form-control" name="company" t-att-value="company" required="1"/>
@@ -78,7 +81,7 @@
                             <div class="mb-0 py-2 col-12 ">
                                 <div class="row ">
                                     <label class="col-form-label col-sm-auto " style="width: 200px" for="start">
-                                        <span class="">Date for Visit</span>
+                                        <span class="">Date for Demo</span>
                                     </label>
                                     <div class="col-sm">
                                         <input type="text" id="datetimepickerID" class="form-control " data-target="#datetimepickerID" data-toggle="datetimepicker" name="start" t-att-value="start" />
@@ -100,6 +103,9 @@
         <xpath expr="//div[@class='mb-0 py-2 col-12 s_website_form_submit'][1]" position="inside">
             <button type="button" id ='custom_redirect_button' class="btn btn-primary btn-lg ">
                 Book Slot</button>
+        </xpath>
+        <xpath expr="//form[@id='contactus_form']" position="attributes">
+            <attribute name="data-model_name">crm.lead</attribute>
         </xpath>
     </template>
 </odoo>
