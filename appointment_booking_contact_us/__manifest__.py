@@ -16,6 +16,7 @@
             'views/appointment_template.xml',
             'views/crm_lead_meeting_tab.xml',
             'views/thankyou_form_submitted.xml',
+            'views/website_view.xml',
             'data/website_data.xml',
     ],
 

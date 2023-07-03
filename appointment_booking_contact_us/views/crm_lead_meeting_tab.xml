@@ -7,7 +7,9 @@
         <field name="arch" type="xml">
             <xpath expr="//page[3]" position="after">
                 <page name="Meeting details" string="Meeting">
-                    <field name="meeting_ids" nolabel="1">
+                    <label for="event_id" string="Meeting"/>
+                    <field name="event_id" string="Meeting"/>
+                    <field name="meeting_ids" nolabel="1" invisible="1">
                         <tree editable= "bottom">
                             <field name="name"/>
                             <field name="partner_id"/>

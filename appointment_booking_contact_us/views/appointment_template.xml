@@ -101,8 +101,13 @@
     </template>
     <template id="contactus_button" inherit_id="website.contactus">
         <xpath expr="//div[@class='mb-0 py-2 col-12 s_website_form_submit'][1]" position="inside">
-            <button type="button" id ='custom_redirect_button' class="btn btn-primary btn-lg ">
+            <t t-if="website and website.appointment_type_id">
+                <button type="button" 
+                         id ='custom_redirect_button' 
+                        class="btn btn-primary btn-lg "
+                        t-att-data-appointment_type_id="website.appointment_type_id.id">
                 Book Slot</button>
+            </t>
         </xpath>
         <xpath expr="//form[@id='contactus_form']" position="attributes">
             <attribute name="data-model_name">crm.lead</attribute>

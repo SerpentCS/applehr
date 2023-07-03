@@ -5,8 +5,5 @@ class CrmMeetings(models.Model):
     _inherit= "crm.lead"
 
     meeting_ids = fields.One2many("meeting.details","meeting_id",string="Meeting Ids")
-
-
-    
-
+    event_id = fields.Many2one("calendar.event",'Meeting Event')
 
