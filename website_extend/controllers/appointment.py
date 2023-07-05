@@ -1,27 +1,13 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import pytz
-import re
-import uuid
-
 from babel.dates import format_datetime, format_date, format_time
-from datetime import datetime, date
-from dateutil.relativedelta import relativedelta
-from werkzeug.exceptions import Forbidden, NotFound
-from werkzeug.urls import url_encode
-
+from datetime import datetime
+from werkzeug.exceptions import NotFound
 from odoo import exceptions, http, fields, _
 from odoo.http import request, route
-from odoo.osv import expression
-from odoo.tools import plaintext2html, DEFAULT_SERVER_DATETIME_FORMAT as dtf
-from odoo.tools.mail import is_html_empty
-from odoo.tools.misc import babel_locale_parse, get_lang
-from odoo.addons.base.models.ir_qweb import keep_query
-from odoo.addons.http_routing.models.ir_http import unslug
-
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as dtf
+from odoo.tools.misc import get_lang
 from odoo.addons.appointment.controllers.appointment import AppointmentController
-
 
 
 class AppointmentControllerExtend(AppointmentController):
@@ -39,7 +25,6 @@ class AppointmentControllerExtend(AppointmentController):
         :param duration: the duration of the slot
         :param filter_appointment_type_ids: see ``Appointment.appointments()`` route
         """
-        print("Custom:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::",kwargs)
         appointment_type = self._fetch_and_check_private_appointment_types(
             kwargs.get('filter_appointment_type_ids'),
             kwargs.get('filter_staff_user_ids'),
@@ -54,7 +39,6 @@ class AppointmentControllerExtend(AppointmentController):
         day_name = format_datetime(date_time_object, 'EEE', locale=get_lang(request.env).code)
         date_formated = format_date(date_time_object.date(), locale=get_lang(request.env).code)
         time_locale = format_time(date_time_object.time(), locale=get_lang(request.env).code, format='short')
-        print("kwargs...........",partner_data)
         if kwargs and kwargs.get('data', False):
             data = json.loads(kwargs.get('data'))
             if data:

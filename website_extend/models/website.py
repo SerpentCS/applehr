@@ -1,4 +1,5 @@
-from odoo import models , api , fields , _  
+
+from odoo import models , fields
 
 
 class Website(models.Model):

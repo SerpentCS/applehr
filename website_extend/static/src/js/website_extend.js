@@ -1,13 +1,8 @@
-odoo.define('appointment_booking_contact_us.start', function (require) {
+odoo.define('website_extend.website_extend', function (require) {
+    "use strict";
 
-    $(document).ready(function myFunction() {
-
-        $('#datetimepickerID').datetimepicker({ format: 'YYYY-MM-DD HH:mm:ss' , inline: true,
-        sideBySide: true, daysOfWeekDisabled: [0, 6] });
-    })
-
-    var publicWidget = require('web.public.widget');
     const ajax = require('web.ajax');
+    var publicWidget = require('web.public.widget');
 
     publicWidget.registry.appointmentForm.include({
         start: function () {
@@ -38,5 +33,5 @@ odoo.define('appointment_booking_contact_us.start', function (require) {
             return formData;
         },
     });
-    return publicWidget.registry.customRedirectButton;
+
 });

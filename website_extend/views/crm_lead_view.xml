@@ -9,15 +9,6 @@
                 <page name="Meeting details" string="Meeting">
                     <label for="event_id" string="Meeting"/>
                     <field name="event_id" string="Meeting"/>
-                    <field name="meeting_ids" nolabel="1" invisible="1">
-                        <tree editable= "bottom">
-                            <field name="name"/>
-                            <field name="partner_id"/>
-                            <field name="phone" />
-                            <field name="email_from"/>
-                            <field name="user_id"/>
-                        </tree>
-                    </field>
                 </page>
             </xpath>
         </field>
