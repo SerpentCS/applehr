@@ -7,7 +7,7 @@
     'version': '16.0.1.0.0',
     'license': 'LGPL-3',
     'author': 'Serpent Consultancy Pvt Ltd',
-    'depends': ['crm','website','calendar','appointment', 'hr'],
+    'depends': ['crm','website_sale','calendar','appointment', 'hr'],
 
 
     'data': [
