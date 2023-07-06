@@ -17,22 +17,23 @@ class SaleOrder(models.Model):
                 for line in self.order_line:
                     if not line.is_balance and not line.is_delivery:
                         qty = qty + line.product_uom_qty
-                        price = price + line.price_unit
-                SaleOrderLine = self.env['sale.order.line']
-                # Create the sales order line
-                so_description = "Balance Line"
-                values = {
-                    'order_id': order.id,
-                    'name': so_description,
-                    'product_uom_qty': qty,
-                    'product_uom': request.website.product_id.uom_id.id,
-                    'product_id':request.website.product_id.id,
-                    'price_unit': -price,
-                    'is_balance': True,
-                }
-                if self.order_line:
-                    values['sequence'] = self.order_line[-1].sequence + 1
-                SaleOrderLine.sudo().create(values)
+                        price = price + line.price_total
+                if price <= order.partner_id.balance:
+                    SaleOrderLine = self.env['sale.order.line']
+                    # Create the sales order line
+                    so_description = "Balance Line"
+                    values = {
+                        'order_id': order.id,
+                        'name': so_description,
+                        'product_uom_qty': qty,
+                        'product_uom': request.website.product_id.uom_id.id,
+                        'product_id':request.website.product_id.id,
+                        'price_unit': -price,
+                        'is_balance': True,
+                    }
+                    if self.order_line:
+                        values['sequence'] = self.order_line[-1].sequence + 1
+                    SaleOrderLine.sudo().create(values)
         return True
 
     def _check_balance_quotation(self):
