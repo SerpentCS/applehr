@@ -14,7 +14,8 @@
         'calendar',
         'website_sale',
         'appointment', 
-        'hr'
+        'hr',
+        'portal'
     ],
     'data': [
         'views/crm_lead_view.xml',
@@ -24,6 +25,7 @@
     'assets': {
         'web.assets_frontend': [
             'website_extend/static/src/js/website_extend.js',
+            'website_extend/static/src/js/balance_portal.js',
         ],
     },
     'application': True,
