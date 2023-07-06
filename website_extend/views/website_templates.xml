@@ -14,8 +14,7 @@
             <attribute name="data-model_name">crm.lead</attribute>
         </xpath>
     </template>
-    
-    <template id="portal_my_home_Balance2" name="Show Balance"
+    <template id="portal_my_home_Balance" name="Show Balance"
               inherit_id="portal.portal_my_home"
               customize_show="True" 
               priority="40">>

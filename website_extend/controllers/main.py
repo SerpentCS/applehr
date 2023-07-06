@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import http, _
+from odoo import fields, http, _
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.payment.controllers.post_processing import PaymentPostProcessing
@@ -58,10 +58,19 @@ class WebsiteSaleDelivery(WebsiteSale):
 
         if order and not order.amount_total and not tx:
             order.with_context(send_email=True).action_confirm()
-            balance = 0
+            total_amount = 0
             for line in order.order_line:
                 if line.is_balance:
-                    balance = balance + line.product_uom_qty
+                    total_amount = total_amount + abs(line.price_total)
+            balance_values = {
+                'description': 'Balance Debited',
+                'partner_id': order.partner_id.id,
+                'credit': 0.0,
+                'debit': total_amount,
+                'date': fields.Date.today(),
+            }
+            request.env['balance.history'].sudo().create(balance_values)
+            order.partner_id.balance = order.partner_id.balance - total_amount
             request.website.sale_reset()
             return request.redirect(order.get_portal_url())
 
