@@ -1,13 +1,28 @@
 <odoo>
     <template id="contactus_button" inherit_id="website.contactus">
-        <xpath expr="//div[@class='mb-0 py-2 col-12 s_website_form_submit'][1]" position="inside">
+        <xpath expr="//div[@class='mb-0 py-2 col-12 s_website_form_submit'][1]" position="replace">
+            <div style=" padding-left:28%" class="col-12">
+                <span style="text-align:start" class="text-danger" id="error-message"
+                    type="hidden">
+                </span>
+            </div>
+
+            <div style=" padding-left:28%" class="col-12">
+                <span id="s_website_form_result" />
+            </div>
+            <div class="mb-0 py-2 col-6 s_website_form_submit" data-name="Submit Button">
+                <div style="width: 200px;" class="s_website_form_label" />
+                <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">Submit</a>
+            </div>
             <t t-if="website and website.appointment_type_id">
-                <button type="button" 
-                        id ='custom_redirect_button' 
-                        class="btn btn-primary btn-lg "
-                        t-att-data-appointment_type_id="website.appointment_type_id.id">
-                    Book Slot
-                </button>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                    <div style="text-align:end;" class="mb-0 py-2">
+                        <button type="button" id="custom_redirect_button"
+                            class="btn btn-primary btn-lg"
+                            t-att-data-appointment_type_id="website.appointment_type_id.id"
+                            onclick="validateForm()">Book Slot</button>
+                    </div>
+                </div>
             </t>
         </xpath>
         <xpath expr="//form[@id='contactus_form']" position="attributes">
@@ -15,14 +30,13 @@
         </xpath>
     </template>
     <template id="portal_my_home_Balance" name="Show Balance"
-              inherit_id="portal.portal_my_home"
-              customize_show="True" 
-              priority="40">>
-        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+        inherit_id="portal.portal_my_home"
+        customize_show="True"
+        priority="40">> <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Balance</t>
-                <t t-set="url" t-value="'/my/quotes'"/>
-                <t t-set="placeholder_count" t-value="'balance_count'"/>
+                <t t-set="url" t-value="'/my/quotes'" />
+                <t t-set="placeholder_count" t-value="'balance_count'" />
             </t>
         </xpath>
     </template>

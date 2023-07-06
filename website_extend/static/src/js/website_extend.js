@@ -1,3 +1,21 @@
+
+
+function validateForm() {
+    const requiredFields = document.querySelectorAll('input[required]');
+    let isValid = true;
+    requiredFields.forEach(function (field) {
+        console.log(field)
+        if (field.value.trim() === '') {
+            isValid = false;
+        }
+    });
+    if (!isValid) {
+        const errorElement = document.getElementById('error-message');
+        errorElement.textContent = ' *Please fill in all the required fields.';
+    }
+    return isValid;
+}
+
 odoo.define('website_extend.website_extend', function (require) {
     "use strict";
 
@@ -18,12 +36,15 @@ odoo.define('website_extend.website_extend', function (require) {
             'click': '_onClickRedirectButton',
         },
         _onClickRedirectButton: async function (ev) {
-            ev.preventDefault();
-            var appointment_type_id = $(ev.currentTarget).data('appointment_type_id')
-            var formData = this._getFormData();
-            const serializedData = encodeURIComponent(JSON.stringify(formData));
-            const appointmentPageURL = `/appointment/${appointment_type_id}?data=${serializedData}`;
-            window.location.href = appointmentPageURL;
+
+            if (validateForm()) {
+                ev.preventDefault();
+                var appointment_type_id = $(ev.currentTarget).data('appointment_type_id')
+                var formData = this._getFormData();
+                const serializedData = encodeURIComponent(JSON.stringify(formData));
+                const appointmentPageURL = `/appointment/${appointment_type_id}?data=${serializedData}`;
+                window.location.href = appointmentPageURL;
+            }
         },
         _getFormData: function () {
             var formData = {};
