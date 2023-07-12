@@ -12,11 +12,9 @@ class SaleOrder(models.Model):
         self._remove_balance_line()
         for order in self:
             if order.partner_id and order.partner_id.balance > 0:
-                qty = 0
                 price = 0
                 for line in self.order_line:
                     if not line.is_balance and not line.is_delivery:
-                        qty = qty + line.product_uom_qty
                         price = price + line.price_total
                 if price <= order.partner_id.balance:
                     SaleOrderLine = self.env['sale.order.line']
@@ -25,7 +23,7 @@ class SaleOrder(models.Model):
                     values = {
                         'order_id': order.id,
                         'name': so_description,
-                        'product_uom_qty': qty,
+                        'product_uom_qty': 1,
                         'product_uom': request.website.product_id.uom_id.id,
                         'product_id':request.website.product_id.id,
                         'price_unit': -price,
