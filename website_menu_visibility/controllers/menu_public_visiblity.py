@@ -1,4 +1,4 @@
-from odoo import fields, models, api, http, _
+from odoo import models, http, _
 from odoo.addons.http_routing.models.ir_http import slug
 from werkzeug.utils import redirect
 from odoo.http import request
