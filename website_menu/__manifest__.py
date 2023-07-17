@@ -1,7 +1,7 @@
 {
     'name': "Website Menu Visiblity",
     'version': '16.0.1.0.0',
-    'depends': ['website'],
+    'depends': ['website','website_sale','website_slides'],
     'author': "Serpent Consultancy",
     'category': 'Tools',
     'description': """
