@@ -41,10 +41,43 @@ class WebsiteSale(WebsiteSale):
     ], type='http', auth="user", website=True, sitemap=sitemap_shop)
     def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, ppg=False, **post):
         return super().shop(page, category, search, min_price, max_price, ppg, **post)
+    
+    @http.route(['/shop/<model("product.template"):product>'], type='http', auth="user", website=True, sitemap=True)
+    def product(self, product, category='', search='', **kwargs):
+        return super().product(product, category, search)
 
+    @http.route(['/shop/cart'], type='http', auth="user", website=True, sitemap=False)
+    def cart(self, access_token=None, revive='', **post):
+        return super().cart(access_token=None, revive='', **post)
+        
 
 class WebsiteSlides(WebsiteSlides):
 
     @http.route('/slides', type='http', auth="user", website=True, sitemap=True)
     def slides_channel_home(self, **post):
         return super().slides_channel_home(**post)
+
+    def sitemap_slide(env, rule, qs):
+        Channel = env['slide.channel']
+        dom = sitemap_qs2dom(qs=qs, route='/slides/', field=Channel._rec_name)
+        dom += env['website'].get_current_website().website_domain()
+        for channel in Channel.search(dom):
+            loc = '/slides/%s' % slug(channel)
+            if not qs or qs.lower() in loc:
+                yield {'loc': loc}
+
+    @http.route([
+        '/slides/<model("slide.channel"):channel>',
+        '/slides/<model("slide.channel"):channel>/page/<int:page>',
+        '/slides/<model("slide.channel"):channel>/tag/<model("slide.tag"):tag>',
+        '/slides/<model("slide.channel"):channel>/tag/<model("slide.tag"):tag>/page/<int:page>',
+        '/slides/<model("slide.channel"):channel>/category/<model("slide.slide"):category>',
+        '/slides/<model("slide.channel"):channel>/category/<model("slide.slide"):category>/page/<int:page>',
+    ], type='http', auth="user", website=True, sitemap=sitemap_slide)
+    def channel(self, channel, category=None, tag=None, page=1, slide_category=None, uncategorized=False, sorting=None, search=None, **kw):
+        return super().channel(channel, category, tag, page, slide_category, uncategorized, sorting, search, **kw)
+    
+
+    @http.route(['/slides/all', '/slides/all/tag/<string:slug_tags>'], type='http', auth="user", website=True, sitemap=True)
+    def slides_channel_all(self, slide_category=None, slug_tags=None, my=False, **post):
+        return super().slides_channel_all(  slide_category=None, slug_tags=None, my=False, **post)
