@@ -24,6 +24,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
+            'website_extend/static/src/scss/website_extend.scss',
             'website_extend/static/src/js/website_extend.js',
             'website_extend/static/src/js/balance_portal.js',
         ],
