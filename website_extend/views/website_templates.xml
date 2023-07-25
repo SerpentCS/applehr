@@ -2,8 +2,7 @@
     <template id="contactus_button" inherit_id="website.contactus">
         <xpath expr="//div[@class='mb-0 py-2 col-12 s_website_form_submit'][1]" position="replace">
             <div style=" padding-left:28%" class="col-12">
-                <span style="text-align:start" class="text-danger" id="error-message"
-                    type="hidden">
+                <span style="text-align:start" class="text-danger" id="error-message" type="hidden">
                 </span>
             </div>
 
@@ -17,10 +16,7 @@
             <t t-if="website and website.appointment_type_id">
                 <div class="col-6 col-sm-6 col-md-6 col-lg-6">
                     <div style="text-align:end;" class="mb-0 py-2">
-                        <button type="button" id="custom_redirect_button"
-                            class="btn btn-primary btn-lg"
-                            t-att-data-appointment_type_id="website.appointment_type_id.id"
-                            onclick="validateForm()">Book Slot</button>
+                        <button type="button" id="custom_redirect_button" class="btn btn-primary btn-lg" t-att-data-appointment_type_id="website.appointment_type_id.id" onclick="validateForm()">Book Slot</button>
                     </div>
                 </div>
             </t>
@@ -29,15 +25,82 @@
             <attribute name="data-model_name">crm.lead</attribute>
         </xpath>
     </template>
-    <template id="portal_my_home_Balance" name="Show Balance"
-        inherit_id="portal.portal_my_home"
-        customize_show="True"
-        priority="40">> <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+    <template id="portal_my_home_Balance" name="Show Balance" inherit_id="portal.portal_my_home" customize_show="True" priority="40">>
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Balance</t>
                 <t t-set="url" t-value="'/my/quotes'" />
                 <t t-set="placeholder_count" t-value="'balance_count'" />
             </t>
+        </xpath>
+    </template>
+    <template id="training_videos" name="Training Videos" inherit_id="website_slides.courses_all">
+        <xpath expr="//div[@class='oe_structure oe_empty'][3]/section[@class='s_banner'][1]/div[@class='container py-5'][1]" position="attributes">
+            <attribute name="t-att-class">'col-lg-12 pe-lg-12 order-lg-1'</attribute>
+
+            <h1 class="display-3 mb-0 text-white">All Training Videos</h1>
+        </xpath>
+    </template>
+    <template id="training_videos_home" name="Training Videos" inherit_id="website_slides.course_main">
+        <xpath expr="//a[@id='home-tab'][1]" position="replace">
+            <a t-att-class="'nav-link %s' % ('active' if active_tab == 'home' else '')" id="home-tab" data-bs-toggle="pill" href="#home" role="tab" aria-controls="home" t-att-aria-selected="'true' if active_tab == 'home' else 'false'">
+                <i class="fa fa-home"/>
+ Training Videos
+            </a>
+        </xpath>
+    </template>
+    <template id="training_videos_search" name="Training Videos" inherit_id="website_slides.course_nav">
+        <xpath expr="//li[@class='breadcrumb-item'][1]" position="replace">
+            <li class="breadcrumb-item">
+                <a href="/slides">Training Videos</a>
+            </li>
+        </xpath>
+        <xpath expr="//t[8]" position="replace">
+            <t t-set="placeholder">Search Training Videos</t>
+        </xpath>
+    </template>
+    <template id="training_videos_sidebar" name="Side Bar" inherit_id="website_slides.course_sidebar">
+        <xpath expr="//div[@class='o_wslides_course_sidebar bg-white px-3 py-2 py-md-3 mb-3 mb-md-5'][1]" position="attributes">
+            <attribute name="style">display:none;</attribute>
+        </xpath>
+    </template>
+    <template id="training_title" name="Training Videos" inherit_id="website_slides.courses_home">
+        <xpath expr="//div[@class='text-white'][1]" position="replace">
+            <div class="text-white">
+                <h1 class="display-3 mb-0">Reach new heights</h1>
+                <h2 class="mb-4">Start your online training today!</h2>
+                <div class="row mt-1 mb-3">
+                    <div class="col">
+                        <p>Skill up and have an impact! Your business career starts here.<br/>
+Time to start your training.</p>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@class='col-lg-3 order-lg-2'][1]" position="attributes">
+            <attribute name="style">display:none;</attribute>
+        </xpath>
+
+        <xpath expr=" //div[@class='row'][1]/div[2]" position="attributes">
+            <attribute name="t-att-class">'col-lg-12 pe-lg-12 order-lg-1'</attribute>
+        </xpath>
+        <xpath expr="//t[6]" position="replace">
+            <t t-set="placeholder">Search Training Videos</t>
+
+        </xpath>
+        <xpath expr="//div[@class='o_wslides_home_content_section mb-3'][1]/div[@class='row o_wslides_home_content_section_title align-items-center'][1]/div[@class='col'][1]/h5[@class='m-0'][1]" position="replace">
+            <h5 class="m-0">My Training videos</h5>
+        </xpath>
+        <xpath expr="//div[@class='o_wslides_home_content_section mb-3'][2]/div[@class='row o_wslides_home_content_section_title align-items-center'][1]/div[@class='col'][1]/h5[@class='m-0'][1]" position="replace">
+            <h5 class="m-0">Most popular Training videos</h5>
+        </xpath>
+        <xpath expr="//div[@class='o_wslides_home_content_section mb-3'][3]/div[@class='row o_wslides_home_content_section_title align-items-center'][1]/div[@class='col'][1]/h5[@class='m-0'][1]" position="replace">
+            <h5 class="m-0">Newest Training videos</h5>
+        </xpath>
+        <xpath expr="//a[@class='nav-link nav-link me-md-2 o_wslides_home_all_slides'][1]" position="replace">
+            <a class="nav-link nav-link me-md-2 o_wslides_home_all_slides" href="/slides/all">
+                <i class="fa fa-graduation-cap me-1"/>
+All Training Videos</a>
         </xpath>
     </template>
 </odoo>

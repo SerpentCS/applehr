@@ -15,7 +15,8 @@
         'website_sale',
         'appointment', 
         'hr',
-        'portal'
+        'portal',
+        'website_slides'
     ],
     'data': [
         'views/crm_lead_view.xml',
