@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="email_template_customers_minimum_balance_list" model="mail.template">
+            <field name="name">Customers Minimum Balance List</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="subject">Customers Minimum Balance List : </field>
+            <field name="email_to">{{ object.company_id.email }}</field>
+            <field name="body_html"><![CDATA[<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello,</p>
+
+                <p>Kindly find the attached file of customers minimum balance list.</p>
+
+                <P>Thank you,</p>
+                <p>SpeQua</p>
+           </div>
+    ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

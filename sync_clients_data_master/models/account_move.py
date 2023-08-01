@@ -1,4 +1,5 @@
-from odoo import fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class AccountMove(models.Model):
@@ -17,19 +18,14 @@ class AccountMove(models.Model):
     transection_id = fields.Char(string="Transection Id")
 
     def action_post(self):
-        # add balance for selected customer.
-        res = super(AccountMove, self).action_post()
-        if self.move_type == 'out_invoice':
-            balance_values = {
-                'description': 'Balance added',
-                'partner_id': self.partner_id.id,
-                'credit': self.amount_untaxed,
-                'debit': 0.0,
-                'date': fields.Date.today(),
-            }
-            self.env['balance.history'].create(balance_values)
-            self.partner_id.balance += self.amount_untaxed
-        return res
+        # Set validation for both rechargeable and non rechargeable product in invoice line.
+        for rec in self:
+            if len(rec.invoice_line_ids) > 1:
+                if any(line.product_id.is_rechargeable for line in rec.invoice_line_ids) and any(
+                        not line.product_id.is_rechargeable for line in rec.invoice_line_ids):
+                    raise ValidationError((
+                        "You can not add both rechargeable and non rechargeable product in invoice lines!"))
+        return super().action_post()
 
 
 class AccountMoveLine(models.Model):

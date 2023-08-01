@@ -5,3 +5,6 @@ from . import account_move
 from . import account_payment
 from . import balance_history
 from . import spequa_charges
+from . import product_template
+from . import sale_order
+from . import res_users

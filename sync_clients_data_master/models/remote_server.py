@@ -205,6 +205,66 @@ class RemoteServer(models.Model):
             self._cr.commit()
         self._generate_employee_creation_charges()
 
+    def _fetch_client_one_time_charges_data(self, server):
+        log_datas = []
+        employee_data_dic = []
+        if server:
+            addr = server.url
+            userid = server.user
+            password = server.password
+            dbname = server.dbname
+        try:
+            uid = xmlrpclib.ServerProxy("%s/xmlrpc/common" % (addr)).authenticate(
+                dbname, userid, password, {}
+            )
+        except:
+            _logger.warning("Could not authenticate user on the remote server")
+        try:
+            log_datas = xmlrpclib.ServerProxy("%s/xmlrpc/object" % (addr)).execute(
+                dbname,
+                uid,
+                password,
+                "partner.work.history",
+                "search_read",
+                ([
+                    ('employee_id', '!=', False),
+                    ('join_date', '<=', server.start_date),
+                ]),
+                ["partner_company_id", "employee_id", "emp_code"],
+            )
+        except:
+            _logger.warning("Could not retrieve data from client server")
+        employee_data = []
+        for logdata in log_datas:
+            vals = {
+                "partner_id": self.partner_id.id,
+                "emp_name": logdata.get("employee_id")[1],
+                "res_model": "hr.employee",
+                "emp_code": logdata.get("emp_code"),
+                "partner_company": logdata.get("partner_company_id")[1]
+                if logdata.get("partner_company_id")
+                else "",
+                "date": fields.Date.today(),
+                "remote_server_id": self.id,
+                "is_one_time_charges": True,
+            }
+            client_data_rec = self.env["client.data"].search([
+                ("emp_code", "=", logdata.get("emp_code")),
+                ("remote_server_id", "=", self.id),
+                ("is_one_time_charges", "=", True),
+            ], limit=1)
+            if not client_data_rec:
+                employee_data.append(vals)
+        self.env["client.data"].create(employee_data)
+        server["date_sync"] = datetime.now()
+        return True
+
+    @api.model
+    def _client_one_time_charges_data(self):
+        server_datas = self.env["remote.server"].search([])
+        for server in server_datas:
+            server._fetch_client_one_time_charges_data(server)
+
     def _generate_employee_creation_charges(self):
         balance_history_obj = self.env['balance.history']
         client_datas = self.env["client.data"].with_context(active_test=False).search([

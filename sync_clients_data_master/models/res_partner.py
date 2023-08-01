@@ -1,9 +1,8 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
-    _description = "Partner"
 
     def _compute_agent_bills_count(self):
         for rec in self:
@@ -23,6 +22,9 @@ class ResPartner(models.Model):
         compute="_compute_agent_bills_count", string="Agent Bills"
     )
     balance = fields.Float(string="Balance")
+    one_time_charge = fields.Float(string="One Time Charge")
+    days_one_time_charge = fields.Integer(string="Days (One Time Charge)")
+    minimum_balance = fields.Float(string="Minimum Balance")
 
     def action_customer_balance_history(self):
         view_id = self.env.ref(

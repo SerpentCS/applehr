@@ -78,17 +78,13 @@
                 </page>
             </xpath>
             <xpath expr="//field[@name='category_id']" position="after">
-                <field
-                    name="agent_id"
-                    attrs="{'invisible': [('is_agent', '=', True)]}"
-                    domain="[('is_agent', '=', True)]"
-                    options="{'no_create': True}"
+                <field name="agent_id" attrs="{'invisible': [('is_agent', '=', True)]}" domain="[('is_agent', '=', True)]" options="{'no_create': True}"
                 />
-                <field
-                    name="agent_commission"
-                    attrs="{'invisible': [('is_agent', '=', True)]}"
-                />
-                <field name="is_agent" invisible="1" />
+                <field name="agent_commission" attrs="{'invisible': [('is_agent', '=', True)]}"/>
+                <field name="is_agent" invisible="1"/>
+                <field name="one_time_charge"/>
+                <field name="days_one_time_charge"/>
+                <field name="minimum_balance"/>
             </xpath>
             <xpath expr="//notebook" position="attributes">
                 <attribute name="attrs">

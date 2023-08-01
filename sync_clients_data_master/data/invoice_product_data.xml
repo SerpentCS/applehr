@@ -5,7 +5,7 @@
         <field name="type">service</field>
         <field name="uom_id" ref="uom.product_uom_unit" />
         <field name="uom_po_id" ref="uom.product_uom_unit" />
-        <field name="description_sale">Per Month employee creation Charges.</field>
+        <field name="description_sale">Per day employee creation charges.</field>
     </record>
 
     <record id="agent_commission_product" model="product.product">
@@ -14,6 +14,22 @@
         <field name="uom_id" ref="uom.product_uom_unit" />
         <field name="uom_po_id" ref="uom.product_uom_unit" />
         <field name="description_sale">Per invoice agent commission charges.</field>
+    </record>
+
+    <record id="customer_recharge_product" model="product.product">
+        <field name="name">Recharge</field>
+        <field name="type">consu</field>
+        <field name="uom_id" ref="uom.product_uom_unit" />
+        <field name="uom_po_id" ref="uom.product_uom_unit" />
+        <field name="description_sale">Customer Recharge</field>
+    </record>
+
+    <record id="customer_sms_pack_product" model="product.product">
+        <field name="name">SMS Pack</field>
+        <field name="type">product</field>
+        <field name="uom_id" ref="uom.product_uom_unit" />
+        <field name="uom_po_id" ref="uom.product_uom_unit" />
+        <field name="description_sale">Customer SMS Pack</field>
     </record>
 
 </odoo>
