@@ -77,6 +77,23 @@ Time to start your training.</p>
                 </div>
             </div>
         </xpath>
+        <xpath expr="//section[@class='s_banner overflow-hidden'][1]" position="replace">
+            <section class="s_banner overflow-hidden" style="background-color:(0, 0, 0, 0); background-image: url(&quot;/website_extend/static/src/img/banner_default.png&quot;); background-size: cover; background-position: 55% 65%" data-snippet="s_banner">
+                <div class="container align-items-center d-flex mb-5 mt-lg-5 pt-lg-4 pb-lg-1">
+                    <div class="text-white">
+                        <h1 class="display-3 mb-0" style="color: black;">Reach new heights</h1>
+                        <h2 class="mb-4" style="color: cadetblue;">Start your online course today!</h2>
+                        <div class="row mt-1 mb-3">
+                            <div class="col" style="color: black;">
+                                <p>Skill up and have an impact! Your business career starts here.<br/>
+Time to start a course.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </xpath>
+
         <xpath expr="//div[@class='col-lg-3 order-lg-2'][1]" position="attributes">
             <attribute name="style">display:none;</attribute>
         </xpath>
@@ -104,3 +121,4 @@ All Training Videos</a>
         </xpath>
     </template>
 </odoo>
+
