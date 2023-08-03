@@ -57,7 +57,8 @@
                 <field name="emp_code" />
                 <field name="date" />
                 <field name="remote_server_id"/>
-                <field name="balance_history_id" readonly="1"/>
+                <field name="balance_history_id" invisible="1"/>
+                <field name="is_one_time_charges" invisible="1"/>
                 <field name="is_paid"/>
             </tree>
         </field>
@@ -70,11 +71,13 @@
             <search string="Search Client Data">
                 <field name="partner_id" />
                 <field name="emp_name" />
+                <field name="emp_code" />
                 <field name="partner_company" />
                 <field name="date" />
                 <field name="remote_server_id" />
                 <field name="balance_history_id" />
                 <filter name="paid" string="Paid" domain="[('is_paid','=', True)]"/>
+                <filter name="one_time_charges" string="One Time Charges" domain="[('is_one_time_charges','=', True)]"/>
                 <group expand="0" string="Group By">
                     <filter
                         string="Customer"
@@ -98,6 +101,12 @@
                         name="employee"
                         domain="[]"
                         context="{'group_by': 'emp_name'}"
+                    />
+                    <filter
+                        string="Spequa ID"
+                        name="spequa_id"
+                        domain="[]"
+                        context="{'group_by': 'emp_code'}"
                     />
                     <filter
                         string="Remote Server"
