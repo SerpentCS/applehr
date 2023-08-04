@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
-    <record id="ir_cron_fetch_client_log_data" model="ir.cron">
-        <field name="name">Client sync data: Fetch Client log Data</field>
+    <record id="ir_cron_fetch_employee_daily_data" model="ir.cron">
+        <field name="name">Fetch Employee Daily Data</field>
         <field name="model_id" ref="sync_clients_data_master.model_remote_server" />
         <field name="state">code</field>
-        <field name="code">model._client_log_data_fetch()</field>
+        <field name="code">model._fetch_employee_daily_data()</field>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
         <field name="priority">1</field>
@@ -13,39 +13,23 @@
         <field name="doall" eval="False" />
     </record>
 
-    <!-- <record id="ir_cron_generate_customer_bill" model="ir.cron">
-        <field name="name">Client sync data: Generate Customer Bill</field>
+    <record id="ir_cron_fetch_employee_past_date_data" model="ir.cron">
+        <field name="name">Fetch Employee Past Date Data</field>
         <field name="model_id" ref="sync_clients_data_master.model_remote_server" />
         <field name="state">code</field>
-        <field name="code">model._generate_customer_bill()</field>
-        <field name="interval_number">1</field>
-        <field name="interval_type">months</field>
-        <field
-            name="nextcall"
-            eval="(DateTime.now().replace(day=1, hour=2, minute=0) + relativedelta(months=1)).strftime('%Y-%m-%d %H:%M:%S')"
-        />
-        <field name="priority">3</field>
-        <field name="numbercall">-1</field>
-        <field name="doall" eval="False" />
-    </record> -->
-
-    <!-- <record id="ir_cron_fetch_client_log_data_past_date" model="ir.cron">
-        <field name="name">Client sync data: Fetch Client log Data - Past Date</field>
-        <field name="model_id" ref="sync_clients_data_master.model_remote_server" />
-        <field name="state">code</field>
-        <field name="code">model._client_log_data_fetch_past_date()</field>
+        <field name="code">model._fetch_employee_past_date_data()</field>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
         <field name="priority">1</field>
         <field name="numbercall">-1</field>
         <field name="doall" eval="False" />
-    </record> -->
+    </record>
 
     <record id="ir_cron_fetch_client_one_time_charges_data" model="ir.cron">
-        <field name="name">Client sync data: Fetch Client One Time Charges Data</field>
+        <field name="name">Fetch Employee One Time Charges Data</field>
         <field name="model_id" ref="sync_clients_data_master.model_remote_server" />
         <field name="state">code</field>
-        <field name="code">model._client_one_time_charges_data()</field>
+        <field name="code">model._fetch_one_time_charges_employee_data()</field>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
         <field name="priority">1</field>
