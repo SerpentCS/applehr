@@ -24,4 +24,37 @@
         </div>
     </t>
 
+    <t t-name="website.slides.fullscreen.video.google_drive">
+        <iframe id="additional_resources_iframe"
+                class="d-none"
+                src="" 
+                background-color="4283586137"
+                style="width: 100%;"/>
+        <div class="parent_slide player ratio ratio-16x9 embed-responsive-item h-100">
+            <iframe t-att-src="widget.get('slide').embedUrl" allowFullScreen="true" frameborder="0" autoplay="1" allow="autoplay"></iframe>
+        </div>
+    </t>
+
+    <t t-name="website.slides.fullscreen.video.youtube">
+        <iframe id="additional_resources_iframe"
+                class="d-none"
+                src="" 
+                background-color="4283586137"
+                style="width: 100%;"/>
+        <div class="parent_slide player ratio ratio-16x9 embed-responsive-item h-100">
+            <iframe t-att-id="'youtube-player' + widget.slide.id" t-att-src="widget.slide.embedUrl" allowFullScreen="true" frameborder="0" enablejsapi="1" autoplay="1" allow="autoplay"></iframe>
+        </div>
+    </t>
+
+    <t t-name="website.slides.fullscreen.video.vimeo">
+        <iframe id="additional_resources_iframe"
+                class="d-none"
+                src="" 
+                background-color="4283586137"
+                style="width: 100%;"/>
+        <div class="parent_slide player ratio ratio-16x9 embed-responsive-item h-100">
+            <t t-out="widget.slide.embedCode"/>
+        </div>
+    </t> 
+
 </templates>

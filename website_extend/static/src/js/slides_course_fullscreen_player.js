@@ -14,6 +14,7 @@ odoo.define('website_extend.fullscreen', function (require) {
             var result = this._super.apply(this,arguments);
             this.sidebar._onClickTab = this._onClickTab;
             this.sidebar.events['click .o_wslides_fs_slide_link'] = this._onClickAdditionalResources;
+            console.log("IIIIIIIIIIIIIIIIIIIIIIIIII")
             return result;
         },
         _onClickTab: function (ev) {
@@ -29,6 +30,7 @@ odoo.define('website_extend.fullscreen', function (require) {
             }
         },
         _onClickAdditionalResources: function (ev) {
+            console.log("EVENNNNNNNNNNNNNNNNNNNNNNNNNNNNNNTttttttt")
             ev.stopPropagation();
             var additional_url = $(ev.currentTarget).data('additional_url');
             $("#additional_resources_iframe").attr({'src': additional_url});
