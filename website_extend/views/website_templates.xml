@@ -120,31 +120,41 @@ Time to start a course.</p>
 All Training Videos</a>
         </xpath>
     </template>
-    
+
 
     <template id="slide_fullscreen_sidebar_category" inherit_id="website_slides.slide_fullscreen_sidebar_category">
         <xpath expr="//t[@t-if='can_access_channel']" position="replace">
             <t t-if="can_access_channel">
                 <t t-set="links" t-value="slide.slide_resource_ids.filtered(lambda res: res.resource_type == 'url')"/>
                 <li t-foreach="links" t-as="link" class="ps-0 mb-1">
-                    <a t-if="can_access" class="o_wslides_fs_slide_link" t-att-data-additional_url="link.link" 
-                       href="#" >
-                         <i class="fa fa-link me-2"/><span t-esc="link.name"/>
-                     </a>
-                 </li>
-                 <div class="o_wslides_js_course_join ps-0" t-if="slide._has_additional_resources('file')">
-                     <t t-set="resources" 
-                        t-value="slide.slide_resource_ids.filtered(lambda res: res.resource_type == 'file')"/>
-                     <li t-foreach="resources" t-as="resource" class="mb-1">
-                         <a class="o_wslides_fs_slide_link" t-att-data-additional_url="resource._get_download_url2()" 
-                            t-att-href="resource._get_download_url()">
-                             <i class="fa fa-download me-2"/><span t-esc="resource.name"/>
-                         </a>
-                     </li>
-                 </div>
-             </t>
+                    <a t-if="can_access" class="o_wslides_fs_slide_link" t-att-data-additional_url="link.link" href="#">
+                        <i class="fa fa-link me-2"/>
+                        <span t-esc="link.name"/>
+                    </a>
+                </li>
+                <div class="o_wslides_js_course_join ps-0" t-if="slide._has_additional_resources('file')">
+                    <t t-set="resources" t-value="slide.slide_resource_ids.filtered(lambda res: res.resource_type == 'file')"/>
+                    <li t-foreach="resources" t-as="resource" class="mb-1">
+                        <a class="o_wslides_fs_slide_link" t-att-data-additional_url="resource._get_download_url2()" 
+                        t-att-href="resource._get_download_url()">
+                            <i class="fa fa-download me-2"/>
+                            <span t-esc="resource.name"/>
+                        </a>
+                    </li>
+                </div>
+            </t>
         </xpath>
     </template>
-    
+
+
+    <template id="slide_fullscreen_resources" inherit_id="website_slides.slide_fullscreen">
+        <xpath expr="//a[@class='d-flex align-items-center px-3 o_wslides_fs_exit_fullscreen']" position="replace">
+            <a class="d-none d-flex align-items-center px-3 o_wslides_fs_exit_fullscreen" t-attf-href="/slides/slide/#{slug(slide)}">
+                <i class="fa fa-sign-out"/>
+                <span class="d-none d-md-inline-block ms-1">Exit Fullscreen</span>
+            </a>
+        </xpath>
+    </template>
+
 </odoo>
 
