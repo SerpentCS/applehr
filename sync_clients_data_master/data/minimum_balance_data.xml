@@ -6,6 +6,7 @@
         <field name="state">code</field>
         <field name="code">model._fetch_customers_minimum_balance()</field>
         <field name="interval_number">1</field>
+        <field name="nextcall" eval="(DateTime.now() - timedelta()).strftime('%Y-%m-%d 18:40:00')"/>
         <field name="interval_type">days</field>
         <field name="priority">1</field>
         <field name="numbercall">-1</field>

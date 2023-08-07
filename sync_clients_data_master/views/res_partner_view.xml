@@ -58,21 +58,19 @@
                 <page string='Sync Client Data'>
                     <field name='remote_servers_ids'>
                         <tree editable='bottom'>
-                            <field name='name' />
-                            <field name='url' />
-                            <field name='user' />
-                            <field name='password' password="True" />
-                            <field name='dbname' />
-                            <field name="rate" />
+                            <field name="is_stop_server" invisible="1"/>
+                            <field name='name'/>
+                            <field name='url'/>
+                            <field name='user'/>
+                            <field name='password' password="True"/>
+                            <field name='dbname'/>
+                            <field name="rate"/>
                             <field name="start_date" required="1"/>
-                            <field name='date_sync' />
-                            <button
-                                name="button_sync_partner_data"
-                                class="btn date_donebtn-primary"
-                                type="object"
-                                string="Sync Data"
-                                icon="fa-undo"
-                            />
+                            <field name="end_date"/>
+                            <field name='date_sync'/>
+                            <button name="button_sync_partner_data" class="btn date_donebtn-primary" type="object" string="Sync Data" icon="fa-undo"/>
+                            <button name="button_stop_server" class="btn btn-primary fa fa-stop-circle" type="object" string=" Stop Server" attrs="{'invisible': [('is_stop_server', '=', True)]}"/>
+                            <button name="button_start_server" class="btn btn-primary fa fa-play-circle" type="object" string=" Start Server" attrs="{'invisible': [('is_stop_server', '=', False)]}"/>
                         </tree>
                     </field>
                 </page>
@@ -141,5 +139,19 @@
         action="res_partner_action_customer_agent"
         sequence="110"
     />
+
+    <record id="res_partner_act_window_send_excel_report_employee_charges" model="ir.actions.act_window">
+        <field name="name">Send Email Employee Charges Excel Report</field>
+        <field name="res_model">send.excel.report.employee.charges</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_composition_mode': 'mass',
+            'default_mass_keep_log': True,
+            'default_res_ids': active_ids,
+        }</field>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list,form</field>
+    </record>
 
 </odoo>

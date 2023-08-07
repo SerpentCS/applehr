@@ -3,7 +3,7 @@ import logging
 from datetime import datetime
 from datetime import timedelta
 from itertools import groupby
-
+from odoo.exceptions import ValidationError
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
@@ -32,6 +32,8 @@ class RemoteServer(models.Model):
     date_sync = fields.Datetime(string="Last Sync Date", default=datetime.now())
     rate = fields.Float()
     start_date = fields.Date(string="Start Date")
+    end_date = fields.Date(string="End Date")
+    is_stop_server = fields.Boolean(string="Stop/Run Server")
 
     def button_sync_partner_data(self):
         for server in self:
@@ -56,6 +58,22 @@ class RemoteServer(models.Model):
                     "sticky": False,
                 },
             }
+
+    def button_stop_server(self):
+        for server in self:
+            if not server.end_date:
+                raise ValidationError(_(
+                    "End Date are required in sync client data line %s!") % (server.name))
+            server.write({
+               "is_stop_server": True,
+            })
+
+    def button_start_server(self):
+        for server in self:
+            server.write({
+               "is_stop_server": False,
+               "end_date": False,
+            })
 
     def _fetch_daily_data(self, server):
         # Get employee active deta base on today date
@@ -277,7 +295,9 @@ class RemoteServer(models.Model):
 
     @api.model
     def _fetch_employee_daily_data(self):
-        server_datas = self.env["remote.server"].search([])
+        server_datas = self.env["remote.server"].search([
+            ('is_stop_server', '=', False)
+        ])
         for server in server_datas:
             server._fetch_daily_data(server)
             self._cr.commit()
@@ -285,7 +305,9 @@ class RemoteServer(models.Model):
 
     @api.model
     def _fetch_employee_past_date_data(self):
-        server_datas = self.env["remote.server"].search([])
+        server_datas = self.env["remote.server"].search([
+            ('is_stop_server', '=', False)
+        ])
         for server in server_datas:
             server._fetch_past_date_deta(server)
             self._cr.commit()
@@ -293,7 +315,9 @@ class RemoteServer(models.Model):
 
     @api.model
     def _fetch_one_time_charges_employee_data(self):
-        server_datas = self.env["remote.server"].search([])
+        server_datas = self.env["remote.server"].search([
+            ('is_stop_server', '=', False)
+        ])
         for server in server_datas:
             server._fetch_one_time_charges_data(server)
         self._generate_employee_creation_charges()
