@@ -18,3 +18,12 @@ class SlideResource(models.Model):
         #     'download': 'true',
         #     'filename': file_name
         # })
+    
+    def _get_download_url2(self):
+        self.ensure_one()
+        #return '#'
+        extension_file_name = get_extension(self.file_name) if self.file_name else ''
+        file_name = self.name if self.name.endswith(extension_file_name) else self.name + extension_file_name
+        return f'/web/content/slide.slide.resource/{self.id}/data?' + url_encode({
+            'filename': file_name
+        })
