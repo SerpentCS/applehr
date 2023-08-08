@@ -53,3 +53,4 @@ class SlideResource(models.Model):
         return f'/web/content/slide.slide.resource/{self.id}/data?' + url_encode({
             'filename': file_name
         })
+        

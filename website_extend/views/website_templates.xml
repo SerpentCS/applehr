@@ -114,6 +114,12 @@ Time to start a course.</p>
         <xpath expr="//div[@class='o_wslides_home_content_section mb-3'][3]/div[@class='row o_wslides_home_content_section_title align-items-center'][1]/div[@class='col'][1]/h5[@class='m-0'][1]" position="replace">
             <h5 class="m-0">Newest Training videos</h5>
         </xpath>
+        <xpath expr="//div[@class='o_wslides_home_content_section mb-3'][@t-if='channels_popular']" position="attributes">
+            <attribute name="style">display:none;</attribute>
+        </xpath>
+        <xpath expr="//div[@class='o_wslides_home_content_section mb-3'][@t-if='channels_newest']" position="attributes">
+            <attribute name="style">display:none;</attribute>
+        </xpath>
         <xpath expr="//a[@class='nav-link nav-link me-md-2 o_wslides_home_all_slides'][1]" position="replace">
             <a class="nav-link nav-link me-md-2 o_wslides_home_all_slides" href="/slides/all">
                 <i class="fa fa-graduation-cap me-1"/>

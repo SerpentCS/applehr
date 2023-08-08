@@ -8,6 +8,26 @@ from odoo.http import request
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    state = fields.Selection(
+        selection=[
+            ('draft', "Quotation"),
+            ('sent', "Quotation Sent"),
+            ('sale', "Sales Order"),
+            ('done', "Locked"),
+            ('cancel', "Cancelled"),
+            ('confirm', "Confirm"),
+        ],
+        string="Status",
+        readonly=True, copy=False, index=True,
+        tracking=3,
+        default='draft')
+    
+    def action_completed(self):
+
+        self.state="confirm"
+
+        return True
+
     def set_balance_line(self):
         self._remove_balance_line()
         for order in self:
