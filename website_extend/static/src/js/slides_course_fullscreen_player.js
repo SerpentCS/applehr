@@ -10,8 +10,6 @@ odoo.define('website_extend.fullscreen', function (require) {
     };
 
 
-
-
     Fullscreen.include({
         init: function (parent, slides, defaultSlideId, channelData) {
             var result = this._super.apply(this, arguments);
@@ -32,7 +30,7 @@ odoo.define('website_extend.fullscreen', function (require) {
             }
         },
         _onClickAdditionalResources: function (ev) {
-            ev.preventDefault();
+            ev.stopPropagation();
             var additional_url = $(ev.currentTarget).data('additional_url');
             $("#additional_resources_iframe").attr({ 'src': additional_url });
             $("#additional_resources_iframe").removeClass('d-none');

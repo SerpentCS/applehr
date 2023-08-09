@@ -4,7 +4,6 @@ function validateForm() {
     const requiredFields = document.querySelectorAll('input[required]');
     let isValid = true;
     requiredFields.forEach(function (field) {
-        console.log(field)
         if (field.value.trim() === '') {
             isValid = false;
         }
