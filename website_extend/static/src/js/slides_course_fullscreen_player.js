@@ -15,6 +15,9 @@ odoo.define('website_extend.fullscreen', function (require) {
             var result = this._super.apply(this, arguments);
             this.sidebar._onClickTab = this._onClickTab;
             this.sidebar.events['click .o_wslides_fs_slide_link'] = this._onClickAdditionalResources;
+            document.addEventListener("contextmenu", (event) => {
+                event.preventDefault();
+            });
             return result;
         },
         _onClickTab: function (ev) {
