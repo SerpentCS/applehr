@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="email_template_start_server" model="mail.template">
+            <field name="name">Start Server</field>
+            <field name="model_id" ref="sync_clients_data_master.model_remote_server"/>
+            <field name="subject">Start Server</field>
+            <field name="email_to">{{ object.company_id.email }}</field>
+            <field name="body_html"><![CDATA[<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello,</p>
+
+                <p>Please start this server.</p>
+
+                <P>Thank you,</p>
+                <p>SpeQua</p>
+           </div>
+    ]]>
+            </field>
+        </record>
+    </data>
+
+    <data>
+        <record id="email_template_stop_server" model="mail.template">
+            <field name="name">Stop Server</field>
+            <field name="model_id" ref="sync_clients_data_master.model_remote_server"/>
+            <field name="subject">Stop Server</field>
+            <field name="email_to">{{ object.company_id.email }}</field>
+            <field name="body_html"><![CDATA[<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello,</p>
+
+                <p>Please stop this server.</p>
+
+                <P>Thank you,</p>
+                <p>SpeQua</p>
+           </div>
+    ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

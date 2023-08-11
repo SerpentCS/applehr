@@ -19,6 +19,7 @@
     <record id="customer_recharge_product" model="product.product">
         <field name="name">Recharge</field>
         <field name="type">consu</field>
+        <field name="is_rechargeable">True</field>
         <field name="uom_id" ref="uom.product_uom_unit" />
         <field name="uom_po_id" ref="uom.product_uom_unit" />
         <field name="description_sale">Customer Recharge</field>

@@ -17,6 +17,7 @@
     "data": [
         "security/ir.model.access.csv",
         "data/customers_minimum_balance_list_email_template.xml",
+        "data/stop_start_server_email_template.xml",
         "data/fetch_client_data.xml",
         "data/minimum_balance_data.xml",
         "data/invoice_product_data.xml",
@@ -26,6 +27,7 @@
         "views/balance_history_views.xml",
         "views/spequa_charges_views.xml",
         "views/product_template_views.xml",
+        "views/res_company_views.xml",
         "wizard/send_excel_report_of_charges_views.xml",
     ],
     "assets": {

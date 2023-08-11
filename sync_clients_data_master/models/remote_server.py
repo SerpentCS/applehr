@@ -1,6 +1,7 @@
 import calendar
 import logging
-from datetime import datetime
+from datetime import datetime, date
+import pytz
 from datetime import timedelta
 from itertools import groupby
 from odoo.exceptions import ValidationError
@@ -76,6 +77,9 @@ class RemoteServer(models.Model):
             })
 
     def _fetch_daily_data(self, server):
+        user = self.env['res.users'].sudo().browse([2])
+        tz = pytz.timezone(user.tz) or pytz.utc
+        today_user_tz_date = pytz.utc.localize(datetime.now()).astimezone(tz).date()
         # Get employee active deta base on today date
         log_datas = []
         if server:
@@ -99,7 +103,7 @@ class RemoteServer(models.Model):
                 ([
                     ('employee_id', '!=', False),
                     '|',
-                    ('end_date', '>=', fields.Date.today()),
+                    ('end_date', '>=', today_user_tz_date),
                     ('end_date', '=', False)
                 ]),
                 ["partner_company_id", "employee_id", "emp_code"],
@@ -108,7 +112,7 @@ class RemoteServer(models.Model):
             _logger.warning("Could not retrieve data from client server")
         employee_data = []
         client_data_rec = self.env["client.data"].search([
-            ("date", "=", fields.Date.today()),
+            ("date", "=", today_user_tz_date),
             ("remote_server_id", "=", server.id),
             ("is_one_time_charges", "=", False),
         ])
@@ -121,7 +125,7 @@ class RemoteServer(models.Model):
                 "partner_company": logdata.get("partner_company_id")[1]
                 if logdata.get("partner_company_id")
                 else "",
-                "date": fields.Date.today(),
+                "date": today_user_tz_date,
                 "remote_server_id": server.id,
             }
             client_data_ids = client_data_rec.filtered(
@@ -135,7 +139,10 @@ class RemoteServer(models.Model):
     def _fetch_past_date_deta(self, server):
         # Get employee past deta data.
         log_datas = []
-        previous_day_date = fields.Date.today() - relativedelta(days=1)
+        user = self.env['res.users'].sudo().browse([2])
+        tz = pytz.timezone(user.tz) or pytz.utc
+        today_user_tz_date = pytz.utc.localize(datetime.now()).astimezone(tz).date()
+        previous_day_date = today_user_tz_date - relativedelta(days=1)
         if server:
             addr = server.url
             userid = server.user
@@ -157,7 +164,7 @@ class RemoteServer(models.Model):
                 ([
                     ('employee_id', '!=', False),
                     ('join_date', '>=', server.start_date),
-                    ('write_date', '<=', previous_day_date),
+                    ('write_date', '<=', today_user_tz_date),
                     ('write_date', '>=', previous_day_date),
                 ]),
                 ["partner_company_id", "employee_id", "emp_code", "join_date", "end_date"],
@@ -204,6 +211,9 @@ class RemoteServer(models.Model):
 
     def _fetch_one_time_charges_data(self, server):
         # Get employee one time charges data base on differece days in conf.
+        user = self.env['res.users'].sudo().browse([2])
+        tz = pytz.timezone(user.tz) or pytz.utc
+        today_user_tz_date = pytz.utc.localize(datetime.now()).astimezone(tz).date()
         log_datas = []
         if server:
             addr = server.url
@@ -243,7 +253,7 @@ class RemoteServer(models.Model):
             if emp_end_date_str:
                 emp_end_date = datetime.strptime(emp_end_date_str, "%Y-%m-%d").date()
             if not emp_end_date:
-                emp_end_date = fields.Date.today()
+                emp_end_date = today_user_tz_date
             emp_join_date = datetime.strptime(emp_join_date_str, "%Y-%m-%d").date()
             differece_days = server.start_date - emp_join_date
             if differece_days.days >= server.partner_id.days_one_time_charge:
@@ -259,7 +269,7 @@ class RemoteServer(models.Model):
                         "partner_company": logdata.get("partner_company_id")[1]
                         if logdata.get("partner_company_id")
                         else "",
-                        "date": fields.Date.today(),
+                        "date": today_user_tz_date,
                         "remote_server_id": server.id,
                         "is_one_time_charges": True,
                     }
@@ -268,7 +278,7 @@ class RemoteServer(models.Model):
                     if not client_data_ids:
                         employee_data.append(vals)
             elif differece_days.days < server.partner_id.days_one_time_charge:
-                total_days = fields.Date.today() - emp_join_date
+                total_days = today_user_tz_date - emp_join_date
                 number_of_days = 0
                 for day in range(total_days.days + 1):
                     date = emp_join_date + timedelta(days=number_of_days)
@@ -323,16 +333,19 @@ class RemoteServer(models.Model):
         self._generate_employee_creation_charges()
 
     def _generate_employee_creation_charges(self):
+        user = self.env['res.users'].sudo().browse([2])
+        tz = pytz.timezone(user.tz) or pytz.utc
+        today_user_tz_date = pytz.utc.localize(datetime.now()).astimezone(tz).date()
         balance_history_obj = self.env['balance.history']
         client_datas = self.env["client.data"].with_context(active_test=False).search([
             ("is_paid", "=", False),
             ("is_one_time_charges", "=", False),
-            ("date", "<=", fields.Date.today())
+            ("date", "<=", today_user_tz_date)
         ])
         client_one_time_charges_datas = self.env["client.data"].with_context(active_test=False).search([
             ("is_paid", "=", False),
             ("is_one_time_charges", "=", True),
-            ("date", "<=", fields.Date.today())
+            ("date", "<=", today_user_tz_date)
         ])
         remote_server_rec = client_datas.mapped('remote_server_id')
         remote_server_one_time_charges_rec = client_one_time_charges_datas.mapped('remote_server_id')
@@ -340,11 +353,11 @@ class RemoteServer(models.Model):
             number_of_employee = len(client_datas.filtered(lambda line: line.remote_server_id.id == server.id))
             amount = number_of_employee * server.rate
             new_balance_rec = balance_history_obj.create({
-                'description': 'Daily employee charges :- %s' %(fields.Date.today().strftime('%d-%m-%Y')),
+                'description': 'Daily employee charges :- %s' %(today_user_tz_date.strftime('%d-%m-%Y')),
                 'partner_id': server.partner_id.id,
                 'credit': 0.0,
                 'debit': amount,
-                'date': fields.Date.today(),
+                'date': today_user_tz_date,
             })
             client_data_rec = client_datas.filtered(
                 lambda line: line.remote_server_id.id == server.id)
@@ -357,11 +370,11 @@ class RemoteServer(models.Model):
             number_of_employee = len(client_one_time_charges_datas.filtered(lambda line: line.remote_server_id.id == server.id))
             amount = number_of_employee * server.partner_id.one_time_charge
             new_balance_rec = balance_history_obj.create({
-                'description': 'One time employee charges :- %s' %(fields.Date.today().strftime('%d-%m-%Y')),
+                'description': 'One time employee charges :- %s' %(today_user_tz_date.strftime('%d-%m-%Y')),
                 'partner_id': server.partner_id.id,
                 'credit': 0.0,
                 'debit': amount,
-                'date': fields.Date.today(),
+                'date': today_user_tz_date,
             })
             client_data_rec = client_one_time_charges_datas.filtered(
                 lambda line: line.remote_server_id.id == server.id)
