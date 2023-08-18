@@ -25,12 +25,21 @@
             <attribute name="data-model_name">crm.lead</attribute>
         </xpath>
     </template>
-    <template id="portal_my_home_Balance" name="Show Balance" inherit_id="portal.portal_my_home" customize_show="True" priority="40">>
+    <template id="portal_my_home_Balance" name="Show Balance" inherit_id="portal.portal_my_home" customize_show="True" priority="40">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Balance</t>
                 <t t-set="url" t-value="'/my/quotes'" />
                 <t t-set="placeholder_count" t-value="'balance_count'" />
+            </t>
+        </xpath>
+    </template>
+    <template id="portal_my_home_Balance_history" name="Show Balance History" inherit_id="portal.portal_my_home" customize_show="True" priority="42">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Balance History</t>
+                <t t-set="url" t-value="'/my/quotes/history'" />
+                <t t-set="placeholder_count" t-value="'balance_record'"/>
             </t>
         </xpath>
     </template>
@@ -133,9 +142,7 @@ All Training Videos</a>
             <t t-if="can_access_channel">
                 <t t-set="links" t-value="slide.slide_resource_ids.filtered(lambda res: res.resource_type == 'url')"/>
                 <li t-foreach="links" t-as="link" class="ps-0 mb-1">
-                    <a t-if="can_access" class="o_wslides_fs_slide_link"
-                       t-att-data-additional_url="link._get_link_resources_url(link.link)" 
-                       href="#">
+                    <a t-if="can_access" class="o_wslides_fs_slide_link" t-att-data-additional_url="link._get_link_resources_url(link.link)" href="#">
                         <i class="fa fa-link me-2"/>
                         <span t-esc="link.name"/>
                     </a>
@@ -143,8 +150,7 @@ All Training Videos</a>
                 <div class="o_wslides_js_course_join ps-0" t-if="slide._has_additional_resources('file')">
                     <t t-set="resources" t-value="slide.slide_resource_ids.filtered(lambda res: res.resource_type == 'file')"/>
                     <li t-foreach="resources" t-as="resource" class="mb-1">
-                        <a class="o_wslides_fs_slide_link" t-att-data-additional_url="resource._get_file_resources_url()" 
-                        t-att-href="resource._get_download_url()">
+                        <a class="o_wslides_fs_slide_link" t-att-data-additional_url="resource._get_file_resources_url()" t-att-href="resource._get_download_url()">
                             <i class="fa fa-download me-2"/>
                             <span t-esc="resource.name"/>
                         </a>
@@ -164,5 +170,98 @@ All Training Videos</a>
         </xpath>
     </template>
 
-</odoo>
+    <template id="balance_history_template" name="Balance History">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
 
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Invoices</t>
+            </t>
+            <form role="form" method="post" action="/my/quotes/history/">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <div class="row mt32 mb16">
+                    <div class="col">
+                        <input name ="start_date" type="text" class="datepicker form-control s_website_form_input" id="start_date" placeholder="Start Date" aria-label="Start Date" onkeydown="return false" required="1"/>
+                    </div>
+                    <div class="col">
+                        <input name="end_date" type="text" class="datepicker form-control" id="end_date" placeholder="End Date" aria-label="End Date" required="1" onkeydown="return false"/>
+                    </div>
+                    <div class="mt32" style="text-align:center">
+                        <button type="submit" class=" btn btn-primary">Check</button>
+                    </div>
+                    <div id="validation_message" class="mt-2 text-danger" style="text-align:center;"></div>
+                </div>
+            </form>
+
+            <div>
+                <t t-if="records">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="active">
+                                <th>Customer</th>
+                                <th>Description</th>
+                                <th>Date</th>
+                                <th>Debit</th>
+                                <th>Credit</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="records" t-as="rec">
+                                <tr>
+                                    <td>
+                                        <a t-att-title="rec['partner_id'].name">
+                                            <t t-esc="rec['partner_id'].name"/>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a t-att-title="rec['description']">
+                                            <t t-esc="rec['description']"/>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a t-att-title="rec['date']">
+                                            <t t-esc="rec['date']"/>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a t-att-title="rec['debit']">
+                                            <t t-esc="rec['debit']"/>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a t-att-title="rec['credit']">
+                                            <t t-esc="rec['credit']"/>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a t-att-title="rec['balance']">
+                                            <t t-esc="rec['balance']"/>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+                <t t-else="records">
+                    <div class="no-records-message">
+                    No records found in these dates
+                    </div>
+                </t>
+                <form role="form" method="post" action="/my/quotes/history/pdf">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="row mt32 mb16">
+                        <input name ="ids" type="hidden" t-att-value="picking_ids"></input>
+                        <t t-if ="records">
+                            <div class="mt32" style="text-align:center">
+                                <button type="submit" class=" btn btn-primary">Print</button>
+                            </div>
+                        </t>
+                    </div>
+                </form>
+            </div>
+
+        </t>
+    </template>
+</odoo>

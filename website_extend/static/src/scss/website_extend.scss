@@ -1,4 +1,27 @@
 .o_wslides_fs_share,
-#o_wslides_sidebar_collapse .d-grid{
+#o_wslides_sidebar_collapse .d-grid {
     display: none !important;
+}
+
+
+.custom-box {
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.header-row {
+    background-color: #343a40;
+    color: #fff;
+    font-size: 16px;
+}
+
+.no-records-message {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
 }
