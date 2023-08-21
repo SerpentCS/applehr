@@ -34,6 +34,7 @@
                             <field name="balance_history_id" readonly="1"/>
                             <field name="is_paid" readonly="1"/>
                             <field name="is_one_time_charges" readonly="1"/>
+                            <field name="amount_charged" readonly="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -60,6 +61,7 @@
                 <field name="balance_history_id" invisible="1"/>
                 <field name="is_one_time_charges" invisible="1"/>
                 <field name="is_paid"/>
+                <field name="amount_charged"/>
             </tree>
         </field>
     </record>

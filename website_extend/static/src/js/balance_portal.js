@@ -4,7 +4,7 @@ import publicWidget from 'web.public.widget';
 
 function initializeDatepickers() {
     $(".datepicker").datepicker({
-        dateFormat: 'mm-dd-yy',
+        dateFormat: 'dd-mm-yy',
     });
 }
 

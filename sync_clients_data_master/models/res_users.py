@@ -1,5 +1,6 @@
 import io
 import base64
+import tempfile
 try:
     from odoo.tools.misc import xlsxwriter
 except ImportError:
@@ -17,11 +18,6 @@ class ResUsers(models.Model):
     @api.model
     def _fetch_customers_minimum_balance(self):
         minimum_balance_list = []
-        # ir_model_data = self.env['ir.model.data']
-        # mail_obj = self.env['mail.template']
-        # template_id = ir_model_data._xmlid_lookup(
-        #     'sync_clients_data_master.email_template_customers_minimum_balance_list')[2]
-        # template_rec = mail_obj.browse(template_id)
         customer_rec = self.env["res.partner"].search([])
         for customer in customer_rec:
             if customer.balance < customer.minimum_balance:
@@ -71,7 +67,7 @@ class ResUsers(models.Model):
         fp.close()
         # Deleting existing attachment files
         attach_ids = attch_obj.search([
-            ('res_model', '=', 'res.partner')
+            ('res_model', '=', 'mail.template')
         ])
         if attach_ids:
             try:
@@ -82,19 +78,18 @@ class ResUsers(models.Model):
         today_date = date.today()
         today_date_str = today_date.strftime('%d/%m/%Y')
         report_name = 'customers_minimum_balance_list_%s.xlsx' % (today_date_str)
-        doc_id = attch_obj.create({
+        doc_id = attch_obj.sudo().create({
             'name': report_name,
             'datas': data,
-            'res_model': 'res.partner',
+            'res_model': 'mail.template',
             'name': report_name,
             'public': True,
         })
         user_admin = self.env.ref('base.user_admin')
         mail_template = self.env.ref(
             'sync_clients_data_master.email_template_customers_minimum_balance_list')
-        mail_template.attachment_ids = False
-        mail_template.update({
-            'attachment_ids': [(4, doc_id.id)],
+        mail_template.write({
+            'attachment_ids': [(6, 0, [doc_id.id])],
             'subject': 'Customers Minimum Balance List : %s' % (today_date_str)
         })
         if customer_minimum_balance_rec:

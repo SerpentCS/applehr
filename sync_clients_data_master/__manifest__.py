@@ -28,7 +28,6 @@
         "views/spequa_charges_views.xml",
         "views/product_template_views.xml",
         "views/res_company_views.xml",
-        "wizard/send_excel_report_of_charges_views.xml",
     ],
     "assets": {
         "web.assets_common": [

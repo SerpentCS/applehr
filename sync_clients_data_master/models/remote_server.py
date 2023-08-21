@@ -127,6 +127,7 @@ class RemoteServer(models.Model):
                 else "",
                 "date": today_user_tz_date,
                 "remote_server_id": server.id,
+                "amount_charged": server.rate,
             }
             client_data_ids = client_data_rec.filtered(
                 lambda line: line.emp_code == logdata.get("emp_code"))
@@ -199,6 +200,7 @@ class RemoteServer(models.Model):
                     else "",
                     "date": date,
                     "remote_server_id": server.id,
+                    "amount_charged": server.rate,
                 }
                 number_of_days += 1
                 client_data_ids = client_data_rec.filtered(
@@ -272,6 +274,7 @@ class RemoteServer(models.Model):
                         "date": today_user_tz_date,
                         "remote_server_id": server.id,
                         "is_one_time_charges": True,
+                        "amount_charged": server.partner_id.one_time_charge,
                     }
                     client_data_ids = client_data_rec.filtered(
                         lambda line: line.emp_code == logdata.get("emp_code") and line.is_one_time_charges)
@@ -293,6 +296,7 @@ class RemoteServer(models.Model):
                             else "",
                             "date": date,
                             "remote_server_id": server.id,
+                            "amount_charged": server.rate,
                         }
                         number_of_days += 1
                         client_data_ids = client_data_rec.filtered(

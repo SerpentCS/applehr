@@ -139,19 +139,4 @@
         action="res_partner_action_customer_agent"
         sequence="110"
     />
-
-    <record id="res_partner_act_window_send_excel_report_employee_charges" model="ir.actions.act_window">
-        <field name="name">Send Email Employee Charges Excel Report</field>
-        <field name="res_model">send.excel.report.employee.charges</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-        <field name="context">{
-            'default_composition_mode': 'mass',
-            'default_mass_keep_log': True,
-            'default_res_ids': active_ids,
-        }</field>
-        <field name="binding_model_id" ref="base.model_res_partner"/>
-        <field name="binding_view_types">list,form</field>
-    </record>
-
 </odoo>

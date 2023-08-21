@@ -15,6 +15,7 @@ class BalanceHistory(models.Model):
     _name = "balance.history"
     _description = "Balance History"
     _rec_name = "partner_id"
+    _order = "date desc"
 
     @api.depends("debit", "credit")
     def _compute_balance(self):
