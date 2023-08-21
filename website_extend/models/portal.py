@@ -14,6 +14,6 @@ class BalancePortal(portal.CustomerPortal):
             values['balance_count'] = my_user.partner_id.balance
         if 'balance_record' in counters:
             my_user = request.env.user
-            values['balance_record'] = my_user.partner_id.balance
+            values['balance_record'] = my_user.partner_id.name
         return values
 

@@ -1,8 +1,6 @@
 from datetime import datetime
 from odoo import http
-import webbrowser
 from odoo.http import request
-from odoo.exceptions import AccessError, MissingError
 from werkzeug.urls import url_join
 from urllib.parse import urlparse, parse_qs, urlencode
 import io
@@ -11,20 +9,45 @@ try:
     from odoo.tools.misc import xlsxwriter
 except ImportError:
     import xlsxwriter
-from io import StringIO
+
+
 
 class BalanceHistory(http.Controller):
 
     @http.route(['/my/quotes/history/'], type='http', auth="public", csrf=False, website=True)
     def portal_my_invoice_detail(self, **kw):
-        if kw :
+
+        error_message = ""
+
+        if kw:
             attch_obj = request.env["ir.attachment"]
             user = request.env.user
-            client_data_rec = request.env['client.data'].sudo().search([
-                ('partner_id', '=', user.partner_id.id),
-                ('date', '>=', kw.get('start_date')),
-                ('date', '<=', kw.get('end_date'))
-            ])
+            start_date_str = kw.get('start_date')
+            end_date_str = kw.get('end_date')
+            
+            try:
+                start_date = datetime.strptime(start_date_str, '%d-%m-%Y').date()
+                end_date = datetime.strptime(end_date_str, '%d-%m-%Y').date()
+
+                if end_date < start_date:
+                    error_message = "End Date should not be less than Start date!!"
+                else:
+                    client_data_rec = request.env['client.data'].sudo().search([
+                        ('partner_id', '=', user.partner_id.id),
+                        ('date', '>=', start_date),
+                        ('date', '<=', end_date)
+                    ])
+
+                    if not client_data_rec:
+                        error_message = "No Data Found!!"
+            except ValueError:
+                error_message = "Invalid Date Format!!"
+            
+            if error_message:
+                return request.render("website_extend.balance_history_template", {
+                    'error_message': error_message,
+                })
+
             # Create Work Book
             fp = io.BytesIO()
             workbook = xlsxwriter.Workbook(fp)
@@ -103,38 +126,21 @@ class BalanceHistory(http.Controller):
             # Creating Attachment
             report_name = '%s_balance_history_report_%s_%s.xlsx' % (
                 user.partner_id.name, kw.get('start_date'), kw.get('end_date'))
-            doc_id = attch_obj.sudo().create({
+            attachment = attch_obj.sudo().create({
                 'name': report_name,
                 'datas': data,
                 'res_model': 'client.data',
                 'name': report_name,
                 'public': True,
             })
-            # Downloading the file
-            # return {
-            #     'type': 'ir.actions.act_url',
-            #     'url': '/web/content/%s?download=true' % (doc_id.id),
-            #     'target': 'self',
-            #     'download': True,
-            # }
+            if attachment.exists() and attachment.public:
+                    data = io.BytesIO(base64.standard_b64decode(attachment["datas"]))
+                    response = http.send_file(data, filename=attachment.name, as_attachment=True)
+                    return response
+                    
         else:
             print("start date not specified")
             return request.render("website_extend.balance_history_template",{})
 
         
 
-    @http.route('/my/quotes/history/pdf', csrf=False, type='http', auth="user", website=True)
-    def print_picking_reports(self,**kw):
-
-        print("keeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",kw)
-
-        picking_ids = kw.get('ids')
-
-        print(picking_ids)
-
-
-        redirect_url = f'/report/pdf/stock.action_report_picking?docids={picking_ids}'
-
-        return request.redirect(redirect_url)
-    
-        
