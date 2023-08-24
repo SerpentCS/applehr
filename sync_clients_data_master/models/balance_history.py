@@ -37,6 +37,7 @@ class BalanceHistory(models.Model):
     balance = fields.Monetary(
         compute="_compute_balance", currency_field="company_currency_id",
         store=True, string='Balance')
+    closing_balance = fields.Float(string='Closing Balance')
 
     def customer_balance(self):
         partner = self.partner_id

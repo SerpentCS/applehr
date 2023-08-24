@@ -23,6 +23,7 @@
                             <field name="emp_name" readonly="1" />
                             <field name="emp_code" readonly="1" />
                             <field name="partner_company" readonly="1" />
+                            <field name="description" readonly="1" />
                         </group>
                         <group string="Activation Details" colspan="1">
                             <field name="date" readonly="1" />
@@ -32,8 +33,8 @@
                                 options="{'no_open': True}"
                             />
                             <field name="balance_history_id" readonly="1"/>
-                            <field name="is_paid" readonly="1"/>
-                            <field name="is_one_time_charges" readonly="1"/>
+                            <field name="is_paid" readonly="1" invisible="1"/>
+                            <field name="is_one_time_charges" readonly="1" invisible="1"/>
                             <field name="amount_charged" readonly="1"/>
                         </group>
                     </group>
@@ -54,6 +55,7 @@
             <tree create="false" delete='false'>
                 <field name="partner_id" />
                 <field name="partner_company" />
+                <field name="description"/>
                 <field name="emp_name" />
                 <field name="emp_code" />
                 <field name="date" />
@@ -128,24 +130,17 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_client_data_tree">
-        <field name="name">Client Data</field>
+        <field name="name">Employee Charges Data</field>
         <field name="res_model">client.data</field>
         <field name="context">{'active_test': False}</field>
     </record>
 
     <menuitem
-        id="data_sync"
-        name="Data Sync"
-        parent="base.menu_custom"
-        sequence="50"
-        groups="base.group_system"
-    />
-
-    <menuitem
         id="menu_client_data"
-        name="Client Data"
-        parent="data_sync"
+        name="Employee Charges Data"
+        parent="account.menu_finance_receivables"
         action="action_client_data_tree"
+        sequence="111"
     />
 
 </odoo>

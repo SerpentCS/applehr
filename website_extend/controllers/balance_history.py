@@ -104,7 +104,7 @@ class BalanceHistory(http.Controller):
                 sheet.write(row, 2, client_data.emp_code, row_center_fmt)
                 sheet.write(row, 3, client_data.partner_company, row_center_fmt)
                 sheet.write(row, 4, client_data.remote_server_id.name, row_center_fmt)
-                sheet.write(row, 5, client_data.balance_history_id.description, row_center_fmt)
+                sheet.write(row, 5, client_data.description, row_center_fmt)
                 sheet.write(row, 6, client_data.amount_charged, row_right_fmt)
                 row += 1
                 sr_count += 1

@@ -12,6 +12,7 @@ class ClientData(models.Model):
     )
     emp_name = fields.Char("Employee")
     emp_code = fields.Char("Spequa ID")
+    description = fields.Char("Description")
     partner_company = fields.Char("Partner Company")
     amount_charged = fields.Float("Charged Amount")
     res_model = fields.Char()

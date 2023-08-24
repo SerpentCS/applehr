@@ -128,6 +128,7 @@ class RemoteServer(models.Model):
                 "date": today_user_tz_date,
                 "remote_server_id": server.id,
                 "amount_charged": server.rate,
+                'description': 'Daily employee charges :- %s' %(today_user_tz_date.strftime('%d-%m-%Y')),
             }
             client_data_ids = client_data_rec.filtered(
                 lambda line: line.emp_code == logdata.get("emp_code"))
@@ -201,6 +202,7 @@ class RemoteServer(models.Model):
                     "date": date,
                     "remote_server_id": server.id,
                     "amount_charged": server.rate,
+                    'description': 'Daily employee charges :- %s' %(date.strftime('%d-%m-%Y')),
                 }
                 number_of_days += 1
                 client_data_ids = client_data_rec.filtered(
@@ -275,6 +277,7 @@ class RemoteServer(models.Model):
                         "remote_server_id": server.id,
                         "is_one_time_charges": True,
                         "amount_charged": server.partner_id.one_time_charge,
+                        'description': 'One time employee charges :- %s' %(today_user_tz_date.strftime('%d-%m-%Y')),
                     }
                     client_data_ids = client_data_rec.filtered(
                         lambda line: line.emp_code == logdata.get("emp_code") and line.is_one_time_charges)
@@ -297,6 +300,7 @@ class RemoteServer(models.Model):
                             "date": date,
                             "remote_server_id": server.id,
                             "amount_charged": server.rate,
+                            'description': 'Daily employee charges :- %s' %(date.strftime('%d-%m-%Y')),
                         }
                         number_of_days += 1
                         client_data_ids = client_data_rec.filtered(
@@ -308,33 +312,35 @@ class RemoteServer(models.Model):
         return True
 
     @api.model
-    def _fetch_employee_daily_data(self):
+    def _fetch_employee_data(self):
         server_datas = self.env["remote.server"].search([
             ('is_stop_server', '=', False)
         ])
         for server in server_datas:
             server._fetch_daily_data(server)
-            self._cr.commit()
-        self._generate_employee_creation_charges()
-
-    @api.model
-    def _fetch_employee_past_date_data(self):
-        server_datas = self.env["remote.server"].search([
-            ('is_stop_server', '=', False)
-        ])
-        for server in server_datas:
             server._fetch_past_date_deta(server)
+            server._fetch_one_time_charges_data(server)
             self._cr.commit()
         self._generate_employee_creation_charges()
 
-    @api.model
-    def _fetch_one_time_charges_employee_data(self):
-        server_datas = self.env["remote.server"].search([
-            ('is_stop_server', '=', False)
-        ])
-        for server in server_datas:
-            server._fetch_one_time_charges_data(server)
-        self._generate_employee_creation_charges()
+    # @api.model
+    # def _fetch_employee_past_date_data(self):
+    #     server_datas = self.env["remote.server"].search([
+    #         ('is_stop_server', '=', False)
+    #     ])
+    #     for server in server_datas:
+    #         server._fetch_past_date_deta(server)
+    #         self._cr.commit()
+    #     self._generate_employee_creation_charges()
+
+    # @api.model
+    # def _fetch_one_time_charges_employee_data(self):
+    #     server_datas = self.env["remote.server"].search([
+    #         ('is_stop_server', '=', False)
+    #     ])
+    #     for server in server_datas:
+    #         server._fetch_one_time_charges_data(server)
+    #     self._generate_employee_creation_charges()
 
     def _generate_employee_creation_charges(self):
         user = self.env['res.users'].sudo().browse([2])
@@ -366,6 +372,9 @@ class RemoteServer(models.Model):
             client_data_rec = client_datas.filtered(
                 lambda line: line.remote_server_id.id == server.id)
             server.partner_id.balance -= amount
+            new_balance_rec.write({
+                'closing_balance': server.partner_id.balance
+            })
             client_data_rec.write({
                 'balance_history_id': new_balance_rec.id,
                 'is_paid': True
@@ -383,6 +392,9 @@ class RemoteServer(models.Model):
             client_data_rec = client_one_time_charges_datas.filtered(
                 lambda line: line.remote_server_id.id == server.id)
             server.partner_id.balance -= amount
+            new_balance_rec.write({
+                'closing_balance': server.partner_id.balance
+            })
             client_data_rec.write({
                 'balance_history_id': new_balance_rec.id,
                 'is_paid': True

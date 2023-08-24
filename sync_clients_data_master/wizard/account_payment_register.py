@@ -18,6 +18,9 @@ class AccountPaymentRegister(models.TransientModel):
                         'debit': 0.0,
                         'date': fields.Date.today(),
                     }
-                    self.env['balance.history'].create(balance_values)
+                    new_balance_rec = self.env['balance.history'].create(balance_values)
                     move.partner_id.balance += move.amount_untaxed
+                    new_balance_rec.write({
+                        'closing_balance': move.partner_id.balance
+                    })
         return super().action_create_payments()

@@ -69,8 +69,11 @@ class WebsiteSaleDelivery(WebsiteSale):
                 'debit': total_amount,
                 'date': fields.Date.today(),
             }
-            request.env['balance.history'].sudo().create(balance_values)
+            new_balance_rec = request.env['balance.history'].sudo().create(balance_values)
             order.partner_id.balance = order.partner_id.balance - total_amount
+            new_balance_rec.write({
+                'closing_balance': order.partner_id.balance
+            })
             request.website.sale_reset()
             return request.redirect(order.get_portal_url())
 

@@ -15,7 +15,8 @@
                         <group>
                             <field name="debit"/>
                             <field name="credit"/>
-                            <field name="balance"/>
+                            <field name="closing_balance" readonly="1"/>
+                            <field name="balance" invisible="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -33,7 +34,8 @@
                 <field name="date"/>
                 <field name="debit"/>
                 <field name="credit"/>
-                <field name="balance"/>
+                <field name="closing_balance" readonly="1"/>
+                <field name="balance" invisible="1"/>
             </tree>
         </field>
     </record>

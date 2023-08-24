@@ -25,7 +25,6 @@
         "views/res_partner_view.xml",
         "views/account_move_views.xml",
         "views/balance_history_views.xml",
-        "views/spequa_charges_views.xml",
         "views/product_template_views.xml",
         "views/res_company_views.xml",
     ],
