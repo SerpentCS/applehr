@@ -1,11 +1,19 @@
 <odoo>
 
-    <record id="employee_creation_invoice_product" model="product.product">
-        <field name="name">Employee Creation Charges</field>
+    <record id="daily_employee_creation_charges_product" model="product.product">
+        <field name="name">Daily Employee Charges</field>
         <field name="type">service</field>
         <field name="uom_id" ref="uom.product_uom_unit" />
         <field name="uom_po_id" ref="uom.product_uom_unit" />
         <field name="description_sale">Per day employee creation charges.</field>
+    </record>
+
+    <record id="one_time_employee_creation_charges_product" model="product.product">
+        <field name="name">One Time Employee Charges</field>
+        <field name="type">service</field>
+        <field name="uom_id" ref="uom.product_uom_unit" />
+        <field name="uom_po_id" ref="uom.product_uom_unit" />
+        <field name="description_sale">One time employee creation charges.</field>
     </record>
 
     <record id="agent_commission_product" model="product.product">
@@ -31,6 +39,14 @@
         <field name="uom_id" ref="uom.product_uom_unit" />
         <field name="uom_po_id" ref="uom.product_uom_unit" />
         <field name="description_sale">Customer SMS Pack</field>
+    </record>
+
+    <record id="customer_whatsapp_pack_product" model="product.product">
+        <field name="name">Whatsapp Pack</field>
+        <field name="type">product</field>
+        <field name="uom_id" ref="uom.product_uom_unit" />
+        <field name="uom_po_id" ref="uom.product_uom_unit" />
+        <field name="description_sale">Customer Whatsapp Pack</field>
     </record>
 
 </odoo>

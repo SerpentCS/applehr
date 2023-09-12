@@ -24,6 +24,7 @@ class BalanceHistory(models.Model):
             line.customer_balance()
 
     partner_id = fields.Many2one("res.partner", string="Customer")
+    product_id = fields.Many2one("product.product", string="Product")
     description = fields.Text(string="Description")
     date = fields.Date(string="Date")
     debit = fields.Float(string="Debit")
@@ -38,6 +39,7 @@ class BalanceHistory(models.Model):
         compute="_compute_balance", currency_field="company_currency_id",
         store=True, string='Balance')
     closing_balance = fields.Float(string='Closing Balance')
+    invoice_id = fields.Many2one('account.move', string="Invoice Reference")
 
     def customer_balance(self):
         partner = self.partner_id

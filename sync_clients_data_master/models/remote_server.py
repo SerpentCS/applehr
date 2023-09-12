@@ -60,26 +60,27 @@ class RemoteServer(models.Model):
                 },
             }
 
-    def button_stop_server(self):
-        for server in self:
-            if not server.end_date:
-                raise ValidationError(_(
-                    "End Date are required in sync client data line %s!") % (server.name))
-            server.write({
-               "is_stop_server": True,
-            })
+    # def button_stop_server(self):
+    #     for server in self:
+    #         if not server.end_date:
+    #             raise ValidationError(_(
+    #                 "End Date are required in sync client data line %s!") % (server.name))
+    #         server.write({
+    #            "is_stop_server": True,
+    #         })
 
-    def button_start_server(self):
-        for server in self:
-            server.write({
-               "is_stop_server": False,
-               "end_date": False,
-            })
+    # def button_start_server(self):
+    #     for server in self:
+    #         server.write({
+    #            "is_stop_server": False,
+    #            "end_date": False,
+    #         })
 
     def _fetch_daily_data(self, server):
         user = self.env['res.users'].sudo().browse([2])
         tz = pytz.timezone(user.tz) or pytz.utc
         today_user_tz_date = pytz.utc.localize(datetime.now()).astimezone(tz).date()
+        daily_product_id = self.env.ref('sync_clients_data_master.daily_employee_creation_charges_product')
         # Get employee active deta base on today date
         log_datas = []
         if server:
@@ -111,10 +112,11 @@ class RemoteServer(models.Model):
         except:
             _logger.warning("Could not retrieve data from client server")
         employee_data = []
+        one_time_product_id = self.env.ref('sync_clients_data_master.one_time_employee_creation_charges_product')
         client_data_rec = self.env["client.data"].search([
             ("date", "=", today_user_tz_date),
             ("remote_server_id", "=", server.id),
-            ("is_one_time_charges", "=", False),
+            ("product_id", "!=", one_time_product_id.id)
         ])
         for logdata in log_datas:
             vals = {
@@ -129,6 +131,7 @@ class RemoteServer(models.Model):
                 "remote_server_id": server.id,
                 "amount_charged": server.rate,
                 'description': 'Daily employee charges :- %s' %(today_user_tz_date.strftime('%d-%m-%Y')),
+                'product_id': daily_product_id.id or False
             }
             client_data_ids = client_data_rec.filtered(
                 lambda line: line.emp_code == logdata.get("emp_code"))
@@ -141,6 +144,7 @@ class RemoteServer(models.Model):
     def _fetch_past_date_deta(self, server):
         # Get employee past deta data.
         log_datas = []
+        daily_product_id = self.env.ref('sync_clients_data_master.daily_employee_creation_charges_product')
         user = self.env['res.users'].sudo().browse([2])
         tz = pytz.timezone(user.tz) or pytz.utc
         today_user_tz_date = pytz.utc.localize(datetime.now()).astimezone(tz).date()
@@ -174,9 +178,10 @@ class RemoteServer(models.Model):
         except:
             _logger.warning("Could not retrieve data from client server")
         employee_data = []
+        one_time_product_id = self.env.ref('sync_clients_data_master.one_time_employee_creation_charges_product')
         client_data_rec = self.env["client.data"].search([
             ("remote_server_id", "=", server.id),
-            ("is_one_time_charges", "=", False),
+            ("product_id", "!=", one_time_product_id.id),
         ])
         for logdata in log_datas:
             emp_join_date_str = logdata.get("join_date")
@@ -203,6 +208,7 @@ class RemoteServer(models.Model):
                     "remote_server_id": server.id,
                     "amount_charged": server.rate,
                     'description': 'Daily employee charges :- %s' %(date.strftime('%d-%m-%Y')),
+                    'product_id': daily_product_id.id or False
                 }
                 number_of_days += 1
                 client_data_ids = client_data_rec.filtered(
@@ -219,6 +225,8 @@ class RemoteServer(models.Model):
         tz = pytz.timezone(user.tz) or pytz.utc
         today_user_tz_date = pytz.utc.localize(datetime.now()).astimezone(tz).date()
         log_datas = []
+        one_time_product_id = self.env.ref('sync_clients_data_master.one_time_employee_creation_charges_product')
+        daily_product_id = self.env.ref('sync_clients_data_master.daily_employee_creation_charges_product')
         if server:
             addr = server.url
             userid = server.user
@@ -275,12 +283,12 @@ class RemoteServer(models.Model):
                         else "",
                         "date": today_user_tz_date,
                         "remote_server_id": server.id,
-                        "is_one_time_charges": True,
                         "amount_charged": server.partner_id.one_time_charge,
                         'description': 'One time employee charges :- %s' %(today_user_tz_date.strftime('%d-%m-%Y')),
+                        "product_id": one_time_product_id.id or False,
                     }
                     client_data_ids = client_data_rec.filtered(
-                        lambda line: line.emp_code == logdata.get("emp_code") and line.is_one_time_charges)
+                        lambda line: line.emp_code == logdata.get("emp_code") and line.product_id.id == one_time_product_id.id)
                     if not client_data_ids:
                         employee_data.append(vals)
             elif differece_days.days < server.partner_id.days_one_time_charge:
@@ -301,6 +309,7 @@ class RemoteServer(models.Model):
                             "remote_server_id": server.id,
                             "amount_charged": server.rate,
                             'description': 'Daily employee charges :- %s' %(date.strftime('%d-%m-%Y')),
+                            'product_id': daily_product_id.id or False
                         }
                         number_of_days += 1
                         client_data_ids = client_data_rec.filtered(
@@ -347,15 +356,17 @@ class RemoteServer(models.Model):
         tz = pytz.timezone(user.tz) or pytz.utc
         today_user_tz_date = pytz.utc.localize(datetime.now()).astimezone(tz).date()
         balance_history_obj = self.env['balance.history']
+        daily_product_id = self.env.ref('sync_clients_data_master.daily_employee_creation_charges_product')
+        one_time_product_id = self.env.ref('sync_clients_data_master.one_time_employee_creation_charges_product')
         client_datas = self.env["client.data"].with_context(active_test=False).search([
             ("is_paid", "=", False),
-            ("is_one_time_charges", "=", False),
+            ("product_id", "!=", one_time_product_id.id),
             ("date", "<=", today_user_tz_date)
         ])
         client_one_time_charges_datas = self.env["client.data"].with_context(active_test=False).search([
             ("is_paid", "=", False),
-            ("is_one_time_charges", "=", True),
-            ("date", "<=", today_user_tz_date)
+            ("product_id", "=", one_time_product_id.id),
+            ("date", "<=", today_user_tz_date),
         ])
         remote_server_rec = client_datas.mapped('remote_server_id')
         remote_server_one_time_charges_rec = client_one_time_charges_datas.mapped('remote_server_id')
@@ -368,6 +379,7 @@ class RemoteServer(models.Model):
                 'credit': 0.0,
                 'debit': amount,
                 'date': today_user_tz_date,
+                'product_id': daily_product_id.id,
             })
             client_data_rec = client_datas.filtered(
                 lambda line: line.remote_server_id.id == server.id)
@@ -388,6 +400,7 @@ class RemoteServer(models.Model):
                 'credit': 0.0,
                 'debit': amount,
                 'date': today_user_tz_date,
+                'product_id': one_time_product_id.id,
             })
             client_data_rec = client_one_time_charges_datas.filtered(
                 lambda line: line.remote_server_id.id == server.id)
@@ -399,3 +412,33 @@ class RemoteServer(models.Model):
                 'balance_history_id': new_balance_rec.id,
                 'is_paid': True
             })
+
+    @api.model
+    def _generate_customer_bill(self):
+        # today_date = fields.Date.today()
+        # one_month_before_date = current_date + relativedelta(months=-1)
+        balance_history_ids = self.env['balance.history'].sudo().search([
+            ("date", "<=", fields.Date.today()),
+            ("invoice_id", "=", False),
+        ])
+        partner_ids = balance_history_ids.mapped('partner_id')
+        for partner in partner_ids:
+            balance_history_rec = balance_history_ids.filtered(lambda line: line.partner_id.id == partner.id)
+            invoice_line = []
+            invoice_vals = {
+                'partner_id': partner.id,
+                'move_type':'out_invoice',
+            }
+            for balance_history in balance_history_rec:
+                invoice_line_vals = (0, 0, {
+                    'name': balance_history.description or '',
+                    'product_id': balance_history.product_id.id or False,
+                    'quantity': 1.0,
+                    'price_unit': balance_history.debit,
+                    'date': balance_history.date or False,
+                })
+                invoice_line.append(invoice_line_vals)
+            new_move_rec = self.env['account.move'].create(invoice_vals)
+            new_move_rec.invoice_line_ids = invoice_line
+            new_move_rec.action_post()
+            balance_history_rec.write({'invoice_id': new_move_rec.id})

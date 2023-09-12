@@ -69,8 +69,8 @@
                             <field name="end_date"/>
                             <field name='date_sync'/>
                             <button name="button_sync_partner_data" class="btn date_donebtn-primary" type="object" string="Sync Data" icon="fa-undo"/>
-                            <button name="button_stop_server" class="btn btn-primary fa fa-stop-circle" type="object" string=" Stop Server" attrs="{'invisible': [('is_stop_server', '=', True)]}"/>
-                            <button name="button_start_server" class="btn btn-primary fa fa-play-circle" type="object" string=" Start Server" attrs="{'invisible': [('is_stop_server', '=', False)]}"/>
+                            <!-- <button name="button_stop_server" class="btn btn-primary fa fa-stop-circle" type="object" string=" Stop Server" attrs="{'invisible': [('is_stop_server', '=', True)]}"/>
+                            <button name="button_start_server" class="btn btn-primary fa fa-play-circle" type="object" string=" Start Server" attrs="{'invisible': [('is_stop_server', '=', False)]}"/> -->
                         </tree>
                     </field>
                 </page>

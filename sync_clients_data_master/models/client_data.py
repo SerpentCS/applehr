@@ -19,5 +19,5 @@ class ClientData(models.Model):
     date = fields.Date(tracking=True)
     remote_server_id = fields.Many2one("remote.server", "Remote Server")
     is_paid = fields.Boolean("Paid")
-    is_one_time_charges = fields.Boolean("One Time Charges")
     balance_history_id = fields.Many2one("balance.history", string="Charges Reference")
+    product_id = fields.Many2one("product.product", string="Product")
