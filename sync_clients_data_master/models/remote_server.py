@@ -420,6 +420,7 @@ class RemoteServer(models.Model):
         balance_history_ids = self.env['balance.history'].sudo().search([
             ("date", "<=", fields.Date.today()),
             ("invoice_id", "=", False),
+            ("product_id", "!=", False),
         ])
         partner_ids = balance_history_ids.mapped('partner_id')
         for partner in partner_ids:
