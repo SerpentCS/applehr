@@ -22,7 +22,7 @@
         'views/crm_lead_view.xml',
         'views/website_templates.xml',
         'views/website_view.xml',
-        'views/sale_order_view.xml',
+        # 'views/sale_order_view.xml',
 
     ],
     'assets': {

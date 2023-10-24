@@ -12,7 +12,8 @@
         "base_vat",
         "l10n_in",
         "stock",
-        "sale",
+        "sale_management",
+        "sale_loyalty",
     ],
     "data": [
         "security/ir.model.access.csv",

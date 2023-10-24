@@ -356,6 +356,7 @@ class RemoteServer(models.Model):
         tz = pytz.timezone(user.tz) or pytz.utc
         today_user_tz_date = pytz.utc.localize(datetime.now()).astimezone(tz).date()
         balance_history_obj = self.env['balance.history']
+        loyalty_card_obj = self.env['loyalty.card']
         daily_product_id = self.env.ref('sync_clients_data_master.daily_employee_creation_charges_product')
         one_time_product_id = self.env.ref('sync_clients_data_master.one_time_employee_creation_charges_product')
         client_datas = self.env["client.data"].with_context(active_test=False).search([
@@ -384,6 +385,11 @@ class RemoteServer(models.Model):
             client_data_rec = client_datas.filtered(
                 lambda line: line.remote_server_id.id == server.id)
             server.partner_id.balance -= amount
+            loyalty_card_rec = loyalty_card_obj.search([
+                ('partner_id', '=', server.partner_id.id)
+            ], limit=1)
+            if loyalty_card_rec:
+                loyalty_card_rec.points = server.partner_id.balance
             new_balance_rec.write({
                 'closing_balance': server.partner_id.balance
             })
@@ -405,6 +411,11 @@ class RemoteServer(models.Model):
             client_data_rec = client_one_time_charges_datas.filtered(
                 lambda line: line.remote_server_id.id == server.id)
             server.partner_id.balance -= amount
+            loyalty_card_rec = loyalty_card_obj.search([
+                ('partner_id', '=', server.partner_id.id)
+            ], limit=1)
+            if loyalty_card_rec:
+                loyalty_card_rec.points = server.partner_id.balance
             new_balance_rec.write({
                 'closing_balance': server.partner_id.balance
             })

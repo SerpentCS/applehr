@@ -3,3 +3,4 @@
 
 
 from . import account_payment_register
+from . import loyalty_generate_wizard
