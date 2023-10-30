@@ -22,6 +22,7 @@
                             />
                             <field name="emp_name" readonly="1" />
                             <field name="emp_code" readonly="1" />
+                            <field name="user_company" readonly="1" />
                             <field name="partner_company" readonly="1" />
                             <field name="description" readonly="1" />
                         </group>
@@ -54,6 +55,7 @@
         <field name="arch" type="xml">
             <tree create="false" delete='false'>
                 <field name="partner_id" />
+                <field name="user_company" />
                 <field name="partner_company" />
                 <field name="description"/>
                 <field name="emp_name" />
@@ -76,6 +78,7 @@
                 <field name="partner_id" />
                 <field name="emp_name" />
                 <field name="emp_code" />
+                <field name="user_company" />
                 <field name="partner_company" />
                 <field name="date" />
                 <field name="remote_server_id" />
@@ -87,6 +90,12 @@
                         name="partner"
                         domain="[]"
                         context="{'group_by': 'partner_id'}"
+                    />
+                    <filter
+                        string="User Company"
+                        name="user_company"
+                        domain="[]"
+                        context="{'group_by': 'user_company'}"
                     />
                     <filter
                         string="Partner Company"

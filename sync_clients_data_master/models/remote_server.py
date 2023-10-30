@@ -107,7 +107,7 @@ class RemoteServer(models.Model):
                     ('end_date', '>=', today_user_tz_date),
                     ('end_date', '=', False)
                 ]),
-                ["partner_company_id", "employee_id", "emp_code"],
+                ["partner_company_id", "employee_id", "emp_code", "user_company_id"],
             )
         except:
             _logger.warning("Could not retrieve data from client server")
@@ -124,6 +124,9 @@ class RemoteServer(models.Model):
                 "emp_name": logdata.get("employee_id")[1],
                 "res_model": "hr.employee",
                 "emp_code": logdata.get("emp_code"),
+                "user_company": logdata.get("user_company_id")[1]
+                if logdata.get("user_company_id")
+                else "",
                 "partner_company": logdata.get("partner_company_id")[1]
                 if logdata.get("partner_company_id")
                 else "",
@@ -173,7 +176,7 @@ class RemoteServer(models.Model):
                     ('write_date', '<=', today_user_tz_date),
                     ('write_date', '>=', previous_day_date),
                 ]),
-                ["partner_company_id", "employee_id", "emp_code", "join_date", "end_date"],
+                ["partner_company_id", "employee_id", "emp_code", "join_date", "end_date", "user_company_id"],
             )
         except:
             _logger.warning("Could not retrieve data from client server")
@@ -201,6 +204,9 @@ class RemoteServer(models.Model):
                     "emp_name": logdata.get("employee_id")[1],
                     "res_model": "hr.employee",
                     "emp_code": logdata.get("emp_code"),
+                    "user_company": logdata.get("user_company_id")[1]
+                    if logdata.get("user_company_id")
+                    else "",
                     "partner_company": logdata.get("partner_company_id")[1]
                     if logdata.get("partner_company_id")
                     else "",
@@ -249,7 +255,7 @@ class RemoteServer(models.Model):
                     ('employee_id', '!=', False),
                     ('join_date', '<=', server.start_date),
                 ]),
-                ["partner_company_id", "employee_id", "emp_code", "join_date", "end_date"],
+                ["partner_company_id", "employee_id", "emp_code", "join_date", "end_date", "user_company_id"],
             )
         except:
             _logger.warning("Could not retrieve data from client server")
@@ -278,6 +284,9 @@ class RemoteServer(models.Model):
                         "emp_name": logdata.get("employee_id")[1],
                         "res_model": "hr.employee",
                         "emp_code": logdata.get("emp_code"),
+                        "user_company": logdata.get("user_company_id")[1]
+                        if logdata.get("user_company_id")
+                        else "",
                         "partner_company": logdata.get("partner_company_id")[1]
                         if logdata.get("partner_company_id")
                         else "",
@@ -302,6 +311,9 @@ class RemoteServer(models.Model):
                             "emp_name": logdata.get("employee_id")[1],
                             "res_model": "hr.employee",
                             "emp_code": logdata.get("emp_code"),
+                            "user_company": logdata.get("user_company_id")[1]
+                            if logdata.get("user_company_id")
+                            else "",
                             "partner_company": logdata.get("partner_company_id")[1]
                             if logdata.get("partner_company_id")
                             else "",
