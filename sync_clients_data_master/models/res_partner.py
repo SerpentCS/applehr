@@ -22,9 +22,9 @@ class ResPartner(models.Model):
         compute="_compute_agent_bills_count", string="Agent Bills"
     )
     balance = fields.Float(string="Balance")
-    one_time_charge = fields.Float(string="One Time Charge")
-    days_one_time_charge = fields.Integer(string="Days (One Time Charge)")
-    minimum_balance = fields.Float(string="Minimum Balance")
+    one_time_charge = fields.Float(string="One Time Charge", tracking=True)
+    days_one_time_charge = fields.Integer(string="Days (One Time Charge)", tracking=True)
+    minimum_balance = fields.Float(string="Minimum Balance", tracking=True)
 
     def action_customer_balance_history(self):
         view_id = self.env.ref(
