@@ -366,6 +366,7 @@ class RemoteServer(models.Model):
     #     self._generate_employee_creation_charges()
 
     def _generate_employee_creation_charges(self):
+        # Generate employee charges base on product.
         today_date = (datetime.now() + timedelta(hours=5.50)).date()
         balance_history_obj = self.env['balance.history']
         loyalty_card_obj = self.env['loyalty.card']
@@ -438,10 +439,10 @@ class RemoteServer(models.Model):
 
     @api.model
     def _generate_customer_bill(self):
-        # today_date = fields.Date.today()
-        # one_month_before_date = current_date + relativedelta(months=-1)
+        # Generate customer bill.
+        today_date = (datetime.now() + timedelta(hours=5.50)).date()
         balance_history_ids = self.env['balance.history'].sudo().search([
-            ("date", "<=", fields.Date.today()),
+            ("date", "<=", today_date),
             ("invoice_id", "=", False),
             ("product_id", "!=", False),
         ])
